@@ -6,7 +6,7 @@ class Nivel():
         self.__puntaje = puntaje
         self.__consigna = consigna
         self.__respuestaValida = respuestaValida
-        self.__correcta = False
+        self.__correcta = False # seteado en False desde el inicio
     
     def getId(self):
         return self.__id
@@ -36,5 +36,5 @@ class Nivel():
 
 nuevoNivel = Nivel (1,'fácil',10,'patito','patote')
 
-print (nuevoNivel.evaluarRespuesta('patoite'))
+print (nuevoNivel.evaluarRespuesta('patote'))
 print (nuevoNivel.getCorrecta())
