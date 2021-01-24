@@ -1,15 +1,16 @@
+"""
+Esta clase modela un Nivel. Se conoce el rango de dificultad, la puntuación,
+qué consigna posee y cuál es la respuesta válida. 
+Los niveles son creados a partir de una base de datos que almacena las consignas.
+No pueden modificarse los atributos
+"""
 class Nivel():
 
-    def __init__(self, id, dificultad, puntaje, consigna,respuestaValida):
-        self.__id = id
+    def __init__(self, dificultad, puntaje, consigna,respuestaValida):
         self.__dificultad = dificultad
         self.__puntaje = puntaje
         self.__consigna = consigna
         self.__respuestaValida = respuestaValida
-        self.__correcta = False # seteado en False desde el inicio
-    
-    def getId(self):
-        return self.__id
     
     def getDificultad(self):
         return self.__dificultad
@@ -20,21 +21,14 @@ class Nivel():
     def getConsigna(self):
         return self.__consigna
 
-    def getCorrecta(self):
-        return self.__correcta
-
     def getRespuestaValida (self):
         return self.__respuestaValida
-    
-    def __setCorrecta(self): #Método privado
-        self.__correcta = not self.__correcta
 
     def evaluarRespuesta (self,respuesta):
         if (respuesta == self.getRespuestaValida()):
-            self.__setCorrecta()
-        return self.getCorrecta()
+            return self.getPuntaje()
+        else: return 0
 
-nuevoNivel = Nivel (1,'fácil',10,'patito','patote')
+nuevoNivel = Nivel ('fácil',10,'¿cómo te llamás?','ivan')
 
-print (nuevoNivel.evaluarRespuesta('patote'))
-print (nuevoNivel.getCorrecta())
+print (nuevoNivel.evaluarRespuesta('ivan'))
