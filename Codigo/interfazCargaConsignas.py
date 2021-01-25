@@ -1,5 +1,6 @@
 import PySimpleGUI as sg
 from cargaDeConsignas import *
+from interfazConsignas import *
 
 
 def interfazPrincipal ():
@@ -16,18 +17,21 @@ def interfazPrincipal ():
     return layout  
 
 def verConsignas (archivo):
-    listadoClave = []
-    listadoValor = []
+    '''
+        Crea dos listas, una de preguntas y otra de respuestas.
+        Con eso construye el string del conjunto de preguntas almacenadas
+    '''
+    listadoClave = [] #almacena preguntas
+    listadoValor = [] #almacena respuestas
     for preg in range(len(archivo.preguntas)):
         listadoClave = listadoClave + list(archivo.preguntas[preg].keys())
-        #listadoCOnsignas = listadoCOnsignas + 'Pregunta '+str(preg+1)+': '+ list(archivo.preguntas.keys())
         listadoValor=listadoValor + list(archivo.preguntas[preg].values())
     listado = ''
-    for p in range(len(archivo.preguntas)):
-        listado = listado + ' ' +str(listadoClave[p])+': '+str(listadoValor[p])
+    for p in range(len(listadoClave)):
+        listado = listado + str(p) + ' ' +str(listadoClave[p])+': '+str(listadoValor[p] +'\n')
     print (listado)
-    print(archivo.imprimirPreguntas())
-
+    consignas(listado)
+    
 def inicio():
     altura = 400
     largo = 200
