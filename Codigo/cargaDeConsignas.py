@@ -10,6 +10,7 @@ class AlmacenamientoConsignas():
 
     def __init__(self):
         self.preguntas = []
+        self.cargar()
 
     def crearArchivo (self):
         fichero = open (self.rutaGuardado, 'wb')
@@ -62,13 +63,13 @@ class AlmacenamientoConsignas():
         self.guardar()
 
     
-pregunta = ''
-respuesta = ''
-nivelInicial = []
-seguir = ''
-ok = True
-archivo = AlmacenamientoConsignas()
-archivo.imprimirPreguntas()
+#pregunta = ''
+#respuesta = ''
+##nivelInicial = []
+#seguir = ''
+#ok = True
+#archivo = AlmacenamientoConsignas()
+#archivo.imprimirPreguntas()
 #print (archivo.buscarPregunta('dos'))
 #print(archivo.consignaEnPosicion(1))
 #archivo.borrarPregunta(1)
