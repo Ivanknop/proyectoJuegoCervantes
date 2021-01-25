@@ -28,11 +28,39 @@ class AlmacenamientoConsignas():
         try:
             fichero = open(self.rutaGuardado, 'rb')
             self.preguntas = pickle.load(fichero)
-            for e in self.preguntas:
-                print (e)
+            #for e in self.preguntas:
+             #   print (e)
             fichero.close()
         except:
             self.crearArchivo()
+    
+    def imprimirPreguntas (self):
+        self.cargar()
+        for e in self.preguntas:
+            print(e)
+    
+    def buscarPregunta (self,pregunta):
+        self.cargar()
+        preg = {}
+        for e in self.preguntas:
+            if (e['pregunta']==pregunta):
+                preg = e
+                break
+        return preg
+    
+    def consignaEnPosicion(self,pos):
+        return self.preguntas[pos]
+
+    def borrarPregunta (self,pos):
+        self.cargar()
+        self.preguntas.pop(pos)
+        self.guardar()
+
+    def vaciarConsignas (self):
+        self.cargar()
+        self.preguntas=[]
+        self.guardar()
+
     
 pregunta = ''
 respuesta = ''
@@ -40,7 +68,11 @@ nivelInicial = []
 seguir = ''
 ok = True
 archivo = AlmacenamientoConsignas()
-archivo.cargar()
+archivo.imprimirPreguntas()
+#print (archivo.buscarPregunta('dos'))
+#print(archivo.consignaEnPosicion(1))
+#archivo.borrarPregunta(1)
+#archivo.imprimirPreguntas()
 '''
 while ok:
     pregunta=    input ('Ingrese una consigna: ')
