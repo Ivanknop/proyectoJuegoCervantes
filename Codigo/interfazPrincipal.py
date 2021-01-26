@@ -1,7 +1,7 @@
 import PySimpleGUI as sg
 from tema import *
 from interfazCargaConsignas import *
-
+from interfazJuego import *
 
 def actualizarColumna(ventana,*columna):
     for e in ventana.element_list():
@@ -13,12 +13,6 @@ def actualizarColumna(ventana,*columna):
             else:
                 ventana.FindElement(e.Key).update(visible=False)
 
-def interfazJuego():
-    layout = [
-        [sg.Text('ACÁ HAY QUE DESARROLLAR EL JUEGO')],
-        [sg.Button('volver',key='volver')]
-    ]
-    return layout
 
 def interfazInicial():
     layout= [
