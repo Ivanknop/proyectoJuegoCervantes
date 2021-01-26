@@ -1,4 +1,5 @@
 import PySimpleGUI as sg
+from tema import *
 
 def interfaz(texto):
     col = [
@@ -7,8 +8,8 @@ def interfaz(texto):
         ]
     layout = [
         [sg.Column(col, scrollable=(True),vertical_scroll_only=True)],
-        [sg.Button('Salir',size=(5,1),border_width=1,button_color=('black','#afad71'),key = 'salir'),
-        sg.Button('Borrar consigna',size=(12,1),border_width=1,button_color=('black','#afad71'),key = 'borrar'),
+        [sg.Button('Salir',size=(5,1),border_width=1,key = 'salir'),
+        sg.Button('Borrar consigna',size=(12,1),border_width=1,key = 'borrar'),
         ]
     ]
     return layout
@@ -23,9 +24,10 @@ def esNumeroValido(cadena,almacenamiento):
         return ('No entiendo')
 
 def consignas(texto):
+    tema()
     altura = 400
     largo = 200
-    ventana = sg.Window ('Juego Cervantes: Consignas',interfaz(texto), size = (altura,largo),background_color='#f9e4b7',)
+    ventana = sg.Window ('Juego Cervantes: Consignas',interfaz(texto), size = (altura,largo))
     ventana.Finalize()
 
     while True:
