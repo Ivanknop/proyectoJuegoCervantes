@@ -3,11 +3,11 @@ from tema import *
 
 def interfaz(texto):
     col = [
-        [sg.Text('CONSGINAS ALMACENADAS',font = ('Italic 16'),key='consignas')],
+        [sg.Text('CONSIGNAS ALMACENADAS',font = ('Italic 16'),key='consignas')],
         [sg.Text(texto,font=('Italic 10'),auto_size_text=True)]
         ]
     layout = [
-        [sg.Column(col, scrollable=(True),vertical_scroll_only=True)],
+        [sg.Column(col, scrollable=True)],
         [sg.Button('Salir',size=(5,1),border_width=1,key = 'salir'),
         sg.Button('Borrar consigna',size=(12,1),border_width=1,key = 'borrar'),
         ]

@@ -5,7 +5,7 @@ def tema():
     Configuración genérica del diseño de las interfaces que facilita el diseño. 
     Después se adapta a la especificidad de cada pestaña.
     '''
-    sg.LOOK_AND_FEEL_TABLE['juego'] = {'BACKGROUND': '#133d51', #f9e4b7', #'#4f280a'
+    sg.LOOK_AND_FEEL_TABLE['juego'] = {'BACKGROUND': '#37CE67', #f9e4b7', #'#4f280a'
                                             'TEXT': '#fff4c9',
                                             'INPUT': '#c7e78b',
                                             'TEXT_INPUT': '#000000',
