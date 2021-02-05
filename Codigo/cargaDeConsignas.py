@@ -20,9 +20,9 @@ class AlmacenamientoConsignas():
         self.preguntas.append ({'pregunta':pregunta,'respuesta':respuesta,
         'respuesta erronea 1':mal1,'respuesta erronea 2':mal2,'respuesta erronea 3':mal3,
         'dificultad':dif})
-        self.guardar()
+        self.__guardar()
     
-    def guardar(self):
+    def __guardar(self):
         fichero = open(self.rutaGuardado, 'wb')
         pickle.dump(self.preguntas, fichero)
         fichero.close()
@@ -57,14 +57,13 @@ class AlmacenamientoConsignas():
     def borrarPregunta (self,pos):
         self.cargar()
         self.preguntas.pop(pos)
-        self.guardar()
+        self.__guardar()
 
     def vaciarConsignas (self):
         self.cargar()
         self.preguntas=[]
-        self.guardar()
+        self.__guardar()
 
-    
 #pregunta = ''
 #respuesta = ''
 ##nivelInicial = []
