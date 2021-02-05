@@ -62,4 +62,4 @@ def inicio():
             verConsignas(archivo)
     ventana.Close()
 
-inicio()
+#inicio()
