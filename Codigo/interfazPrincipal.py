@@ -24,9 +24,9 @@ def interfazInicial():
     ]
     return layout
 
-def interfazDeInicio():
+def interfazDeInicio(nivel):
     colInicial = interfazInicial()
-    colJugar = interfazJuego()
+    colJugar = interfazJuego(nivel)
 
     layout = [
             
@@ -39,12 +39,13 @@ def principal():
     alto = 500
     ancho = 700
     tema()
-    ventana = sg.Window ('Juego Cervantes: Inicio',interfazDeInicio(), size = (ancho,alto),element_justification='center')
+    nivel = 1
+    ventana = sg.Window ('Juego Cervantes: Inicio',interfazDeInicio(nivel), size = (ancho,alto),element_justification='center')
     ventana.Finalize()
 
     while True:
         evento, value = ventana.read()
-        if (evento == None or evento == 'salir') :
+        if (evento == None or evento == 'salir' or evento=='salir2') :
             break
         if (evento == 'docente'):
             clave = sg.popup_get_text('Ingrese la clave',password_char='*')
@@ -58,6 +59,12 @@ def principal():
             sg.popup('PUNTAJES en construcción')
         if (evento == 'volver'):
             actualizarColumna (ventana,'colInicio')
+        if (ventana['colInicio'].Visible==True):
+            if (evento =='1'):
+                nivel+=1
+                pasarNivel(ventana,nivel)
+                print (nivel)
+            else: print('chau')
             
     ventana.Close()
 
