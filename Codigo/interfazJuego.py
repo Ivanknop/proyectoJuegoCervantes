@@ -5,12 +5,12 @@ import random
 def pasarNivel(ven,nivel):
     ven['nivel'].Update('NIVEL'+str(nivel))
 
-def interfazJuego(nivel):
+def interfazJuego(nivel,imgBoton):
     titulo = 'JUEGO DE PREGUNTAS SOBRE "EL QUIJOTE"'
     colPreg1 = [
-        sg.Button('lalala 1',key='1'),sg.Button('lalala 2',key='2')
+        sg.Button('lalala 1',image_filename=imgBoton,key='1'),sg.Button('lalala 2',image_filename=imgBoton,key='2')
         ]
-    ladoJugador =[sg.Button('lalala 3',key='3'),sg.Button('lalala 4',key='4')]
+    ladoJugador =[sg.Button('lalala 3',image_filename=imgBoton,key='3'),sg.Button('lalala 4',image_filename=imgBoton,key='4')]
 
     layout = [
         [sg.Text(titulo,font='Italic 16'),

@@ -2,6 +2,7 @@ import PySimpleGUI as sg
 from tema import *
 from interfazCargaConsignas import *
 from interfazJuego import *
+import os 
 
 def actualizarColumna(ventana,*columna):
     for e in ventana.element_list():
@@ -14,19 +15,20 @@ def actualizarColumna(ventana,*columna):
                 ventana.FindElement(e.Key).update(visible=False)
 
 
-def interfazInicial():
+def interfazInicial(imgBoton):
+    
     layout= [
         [sg.Text ('BIENVENIDE!!',font=('Arial 30'),justification='center',key='bienvenido')],
-        [sg.Button('Jugar',font=('Arial 16'),size=(12,3),key='jugar'),
-        sg.Button('Ingresar como Docente',font=('Arial 16'),size=(12,3),key='docente'),
-        sg.Button('Puntuaciones',font=('Arial 16'),size=(12,3),key='puntos'),
-        sg.Button('Salir',font=('Arial 16'),size=(12,3),key='salir')]
+        [sg.Button('Jugar',image_filename=imgBoton,font=('Arial 16'),size=(12,3),key='jugar'),
+        sg.Button('Ingresar como Docente',image_filename=imgBoton,font=('Arial 14'),size=(12,3),key='docente'),
+        sg.Button('Puntuaciones',image_filename=imgBoton,font=('Arial 16'),size=(12,3),key='puntos'),
+        sg.Button('Salir',image_filename=imgBoton,font=('Arial 16'),size=(12,3),key='salir')]
     ]
     return layout
 
-def interfazDeInicio(nivel):
-    colInicial = interfazInicial()
-    colJugar = interfazJuego(nivel)
+def interfazDeInicio(nivel,imgBoton):
+    colInicial = interfazInicial(imgBoton)
+    colJugar = interfazJuego(nivel,imgBoton)
 
     layout = [
             
@@ -40,7 +42,8 @@ def principal():
     ancho = 700
     tema()
     nivel = 1
-    ventana = sg.Window ('Juego Cervantes: Inicio',interfazDeInicio(nivel), size = (ancho,alto),element_justification='center')
+    imgBoton = os.path.join('multimedia','cuadro.png')
+    ventana = sg.Window ('Juego Cervantes: Inicio',interfazDeInicio(nivel,imgBoton), size = (ancho,alto),element_justification='center')
     ventana.Finalize()
 
     while True:
