@@ -3,6 +3,7 @@ from tema import *
 from interfazCargaConsignas import *
 from interfazJuego import *
 import os 
+from jugadorBeta import *
 
 def actualizarColumna(ventana,*columna):
     for e in ventana.element_list():
@@ -26,9 +27,9 @@ def interfazInicial(imgBoton):
     ]
     return layout
 
-def interfazDeInicio(nivel,imgBoton):
+def interfazDeInicio(nivel,imgBoton,jugador):
     colInicial = interfazInicial(imgBoton)
-    colJugar = interfazJuego(nivel,imgBoton)
+    colJugar = interfazJuego(nivel,imgBoton,jugador)
 
     layout = [
             
@@ -42,8 +43,9 @@ def principal():
     ancho = 700
     tema()
     nivel = 1
+    jugador = JugadorBeta ('Iván')
     imgBoton = os.path.join('multimedia','cuadro.png')
-    ventana = sg.Window ('Juego Cervantes: Inicio',interfazDeInicio(nivel,imgBoton), size = (ancho,alto),element_justification='center')
+    ventana = sg.Window ('Juego Cervantes: Inicio',interfazDeInicio(nivel,imgBoton,jugador), size = (ancho,alto),element_justification='center')
     ventana.Finalize()
 
     while True:
@@ -64,9 +66,8 @@ def principal():
             actualizarColumna (ventana,'colInicio')
         if (ventana['colInicio'].Visible==True):
             if (evento =='1'):
-                nivel+=1
-                pasarNivel(ventana,nivel)
-                print (nivel)
+                jugador.incrementarNivel()
+                pasarNivel(ventana,jugador.getNivel(),imgBoton)
             else: print('chau')
             
     ventana.Close()
