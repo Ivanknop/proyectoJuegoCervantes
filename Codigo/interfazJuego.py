@@ -4,13 +4,6 @@ import random
 import pickle
 from cargaDeConsignas import *
 
-def crearBotones2(imgBoton,consignas):
-    botones = [
-        sg.Button(consignas['respuesta1'],key = '1')
-        ]
-
-    return botones
-
 def crearBotones(imgBoton,consignas):
     botones = []
     print (consignas['pregunta'])
@@ -19,19 +12,22 @@ def crearBotones(imgBoton,consignas):
     random.shuffle(botones)
     return botones
 
-def pasarNivel(ven,nivel,imgBoton):
+def pasarNivel(ven,nivel,imgBoton,consignas):
     ven['nivel'].Update('NIVEL'+str(nivel))
+    ven['nroPregunta'].Update(consignas['pregunta'])
+    for i in range(4):
+        ven[str(i)].Update(consignas['respuesta'+str(i+1)])
 
-def interfazJuego(nivel,imgBoton,jugador,consignas):
+def interfazJuego(imgBoton,jugador,consignas):
     print(consignas.consignaEnPosicion(0))
     titulo = 'JUEGO DE PREGUNTAS SOBRE "EL QUIJOTE"'
-    botonesPreguntas = crearBotones(imgBoton,consignas.consignaEnPosicion(1))   
+    botonesPreguntas = crearBotones(imgBoton,consignas.consignaEnPosicion(0))   
     layout = [
         [sg.Text(titulo,font='Italic 16'),
         sg.Button('MENÚ',key='menu'),sg.Button('volver',key='volver'),sg.Button('salir',key='salir2')],
         [sg.HorizontalSeparator(pad=None)],
-        [sg.Text('NIVEL'+str(nivel),key='nivel')],
-        [sg.Text(consignas.consignaEnPosicion(1)['pregunta'])],
+        [sg.Text('NIVEL'+str(jugador.getNivel()),key='nivel')],
+        [sg.Text(consignas.consignaEnPosicion(0)['pregunta'],key='nroPregunta')],
         botonesPreguntas,
         [sg.HorizontalSeparator(pad=None)],
         [sg.Text('JUGADOR '+ jugador.getNombre().upper(),key='jugNombre'),sg.Text('Puntaje: '+str(jugador.getPuntaje()),key='jugPje')],

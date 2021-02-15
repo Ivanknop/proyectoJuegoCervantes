@@ -28,9 +28,9 @@ def interfazInicial(imgBoton):
     ]
     return layout
 
-def interfazDeInicio(nivel,imgBoton,jugador,consignas):
+def interfazDeInicio(imgBoton,jugador,consignas):
     colInicial = interfazInicial(imgBoton)
-    colJugar = interfazJuego(nivel,imgBoton,jugador,consignas)
+    colJugar = interfazJuego(imgBoton,jugador,consignas)
 
     layout = [
             
@@ -43,11 +43,10 @@ def principal():
     alto = 500
     ancho = 700
     tema()
-    nivel = 1
     consignas = AlmacenamientoConsignas()
     jugador = JugadorBeta ('Iván')
     imgBoton = os.path.join('multimedia','cuadro.png')
-    ventana = sg.Window ('Juego Cervantes: Inicio',interfazDeInicio(nivel,imgBoton,jugador,consignas), size = (ancho,alto),element_justification='center')
+    ventana = sg.Window ('Juego Cervantes: Inicio',interfazDeInicio(imgBoton,jugador,consignas), size = (ancho,alto),element_justification='center')
     ventana.Finalize()
 
     while True:
@@ -67,9 +66,11 @@ def principal():
         if (evento == 'volver'):
             actualizarColumna (ventana,'colInicio')
         if (ventana['colInicio'].Visible==True):
-            if (evento =='1'):
+            if (evento =='0'):
                 jugador.incrementarNivel()
-                pasarNivel(ventana,jugador.getNivel(),imgBoton)
+                print ('BIEN')
+                print (jugador.getNivel())
+                pasarNivel(ventana,jugador.getNivel(),imgBoton,consignas.consignaEnPosicion(1))
             else: print('chau')
             
     ventana.Close()

@@ -2,7 +2,7 @@ class JugadorBeta():
     def __init__(self,nombre):
         self._nombre = nombre
         self._puntaje = 0
-        self._nivel = 0
+        self._nivel = 1
     
     def getPuntaje (self):
         return self._puntaje
