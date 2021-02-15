@@ -4,6 +4,7 @@ from interfazCargaConsignas import *
 from interfazJuego import *
 import os 
 from jugadorBeta import *
+from cargaDeConsignas import *
 
 def actualizarColumna(ventana,*columna):
     for e in ventana.element_list():
@@ -27,9 +28,9 @@ def interfazInicial(imgBoton):
     ]
     return layout
 
-def interfazDeInicio(nivel,imgBoton,jugador):
+def interfazDeInicio(nivel,imgBoton,jugador,consignas):
     colInicial = interfazInicial(imgBoton)
-    colJugar = interfazJuego(nivel,imgBoton,jugador)
+    colJugar = interfazJuego(nivel,imgBoton,jugador,consignas)
 
     layout = [
             
@@ -43,9 +44,10 @@ def principal():
     ancho = 700
     tema()
     nivel = 1
+    consignas = AlmacenamientoConsignas()
     jugador = JugadorBeta ('Iván')
     imgBoton = os.path.join('multimedia','cuadro.png')
-    ventana = sg.Window ('Juego Cervantes: Inicio',interfazDeInicio(nivel,imgBoton,jugador), size = (ancho,alto),element_justification='center')
+    ventana = sg.Window ('Juego Cervantes: Inicio',interfazDeInicio(nivel,imgBoton,jugador,consignas), size = (ancho,alto),element_justification='center')
     ventana.Finalize()
 
     while True:

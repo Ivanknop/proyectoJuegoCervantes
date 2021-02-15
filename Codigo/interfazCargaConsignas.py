@@ -16,13 +16,12 @@ def interfazPrincipal ():
         [sg.Text('Respuesta Incorrecta 2',font = ('Italic 16'),key='mal2')],
         [sg.InputText('',font=('Italic 10'),key='inc2',do_not_clear=False)],
         [sg.Text('Respuesta Incorrecta 3',font = ('Italic 16'),key='mal3')],
-        [sg.InputText('',font=('Italic 10'),key='inc3',do_not_clear=False)],
-        [sg.Text('Ingrese el nivel de dificultad',font = ('Italic 16'),key='dificultad')],
-        [sg.InputText('',font= ('Italic 10'),key='newDif',do_not_clear=False)]
+        [sg.InputText('',font=('Italic 10'),key='inc3',do_not_clear=False)]
     ]
     layoutBotones = [
         [sg.Button('Agregar Consigna',size=(10,2),border_width=1,key = 'preguntas'),
         sg.Button('ver preguntas',size=(10,2),border_width=1,key = 'imprimir'),
+        sg.Button('Vacias Consginas',size=(10,2),border_width=1,key ='vaciar'),
         sg.Button('Salir',size=(10,2),border_width=1,key = 'salir')
         ]
     ]
@@ -57,9 +56,16 @@ def inicio():
         if (evento == None or evento == 'salir') :
             break
         if (evento == 'preguntas'):
-            archivo.agregarConsigna(value['newPreg'],value['newRta'],value['inc1'],value['inc2'],value['inc3'],value['newDif'])
+            archivo.agregarConsigna(value['newPreg'],value['newRta'],value['inc1'],value['inc2'],value['inc3'])
         if (evento == 'imprimir'):
             verConsignas(archivo)
+        if (evento =='vaciar'):
+            decision = aviso('Realmente desea borrar las consignas cargadas?',['SI','NO'])
+            if (decision == '_SI'):
+                print ('ok')    
+                archivo.vaciarConsignas()
+            else:
+                print (archivo.imprimirPreguntas())
     ventana.Close()
 
 #inicio()

@@ -16,10 +16,9 @@ class AlmacenamientoConsignas():
         fichero = open (self.rutaGuardado, 'wb')
         fichero.close()
     
-    def agregarConsigna (self,pregunta,respuesta,mal1,mal2,mal3,dif):
-        self.preguntas.append ({'pregunta':pregunta,'respuesta':respuesta,
-        'respuesta erronea 1':mal1,'respuesta erronea 2':mal2,'respuesta erronea 3':mal3,
-        'dificultad':dif})
+    def agregarConsigna (self,pregunta,respuesta,mal1,mal2,mal3):
+        self.preguntas.append ({'pregunta':pregunta,'respuesta1':respuesta,
+        'respuesta2':mal1,'respuesta3':mal2,'respuesta4':mal3})
         self.__guardar()
     
     def __guardar(self):
