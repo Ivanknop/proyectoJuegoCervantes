@@ -5,6 +5,7 @@ from interfazJuego import *
 import os 
 from jugadorBeta import *
 from cargaDeConsignas import *
+from nivel import *
 
 def actualizarColumna(ventana,*columna):
     for e in ventana.element_list():
@@ -66,13 +67,13 @@ def principal():
         if (evento == 'volver'):
             actualizarColumna (ventana,'colInicio')
         if (ventana['colInicio'].Visible==True):
-            if (evento =='0'):
-                jugador.incrementarNivel()
-                print ('BIEN')
-                print (jugador.getNivel())
-                pasarNivel(ventana,jugador.getNivel(),imgBoton,consignas.consignaEnPosicion(1))
-            else: print('chau')
-            
+            if (evento == '0'):
+                jugador.incrementarNivel() 
+                try:           #Permite controlar el máximo de consignas cargadas
+                    pasarNivel(ventana,jugador,imgBoton,consignas)
+                except:
+                    break
+            else: print('no')
     ventana.Close()
 
 principal()

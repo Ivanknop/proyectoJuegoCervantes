@@ -1,6 +1,6 @@
 import PySimpleGUI as sg
 import random
-#from nivel import *
+from nivel import *
 import pickle
 from cargaDeConsignas import *
 
@@ -12,14 +12,24 @@ def crearBotones(imgBoton,consignas):
     random.shuffle(botones)
     return botones
 
-def pasarNivel(ven,nivel,imgBoton,consignas):
-    ven['nivel'].Update('NIVEL'+str(nivel))
-    ven['nroPregunta'].Update(consignas['pregunta'])
+def pasarNivel(ven,jugador,imgBoton,consignas):
+    nivelActual = jugador.getNivel()-1
+    ven['nivel'].Update('NIVEL'+str(nivelActual))
+    ven['nroPregunta'].Update(consignas.consignaEnPosicion(nivelActual)['pregunta'])
+    indices = [0,1,2,3]
+    random.shuffle(indices)
+    print (indices) #No logro que se randomice la actualización de los botones
     for i in range(4):
-        ven[str(i)].Update(consignas['respuesta'+str(i+1)])
+        ven[str(indices[i])].Update(consignas.consignaEnPosicion(nivelActual)['respuesta'+str(indices[i]+1)])
+
+    return nivelActual
 
 def interfazJuego(imgBoton,jugador,consignas):
-    print(consignas.consignaEnPosicion(0))
+    nivelActual = jugador.getNivel()
+    nivel = Nivel (jugador.getNivel(),consignas.consignaEnPosicion(nivelActual)['pregunta'],consignas.consignaEnPosicion(nivelActual)['respuesta1']
+    ,[consignas.consignaEnPosicion(nivelActual)['respuesta2'],consignas.consignaEnPosicion(nivelActual)['respuesta3']
+    ,consignas.consignaEnPosicion(nivelActual)['respuesta4']])
+    print (nivel)
     titulo = 'JUEGO DE PREGUNTAS SOBRE "EL QUIJOTE"'
     botonesPreguntas = crearBotones(imgBoton,consignas.consignaEnPosicion(0))   
     layout = [

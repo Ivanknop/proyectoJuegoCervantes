@@ -6,9 +6,9 @@ No pueden modificarse los atributos
 """
 class Nivel():
 
-    def __init__(self, nivel, puntaje, pregunta,respuestaValida,respuestasIncorrectas):
+    def __init__(self, nivel, pregunta,respuestaValida,respuestasIncorrectas):
         self.__nroNivel = nivel
-        self.__puntaje = puntaje
+        self.__puntaje = 50
         self.__pregunta = pregunta
         self.__respuestaValida = respuestaValida
         self.__respuestasIncorrectas = respuestasIncorrectas
@@ -36,6 +36,6 @@ class Nivel():
             return self.getPuntaje()
         else: return 0
 
-nuevoNivel = Nivel ('fácil',10,'¿cómo te llamás?','ivan')
+#nuevoNivel = Nivel ('fácil',10,'¿cómo te llamás?','ivan')
 
-print (nuevoNivel.evaluarRespuesta('ivan'))
+#print (nuevoNivel.evaluarRespuesta('ivan'))
