@@ -3,6 +3,7 @@ import random
 from nivel import *
 import pickle
 from cargaDeConsignas import *
+from nivelesEnJuego import *
 
 def crearBotones(imgBoton,consignas):
     botones = []
@@ -12,8 +13,8 @@ def crearBotones(imgBoton,consignas):
     random.shuffle(botones)
     return botones
 
-def pasarNivel(ven,jugador,imgBoton,consignas):
-    nivelActual = jugador.getNivel()-1
+def pasarNivel(ven,ok,jugador,imgBoton,consignas,niveles):
+    nivelActual = jugador.getNivel()
     ven['nivel'].Update('NIVEL'+str(nivelActual))
     ven['nroPregunta'].Update(consignas.consignaEnPosicion(nivelActual)['pregunta'])
     indices = [0,1,2,3]
@@ -21,6 +22,10 @@ def pasarNivel(ven,jugador,imgBoton,consignas):
     print (indices) #No logro que se randomice la actualización de los botones
     for i in range(4):
         ven[str(indices[i])].Update(consignas.consignaEnPosicion(nivelActual)['respuesta'+str(indices[i]+1)])
+    if ok:
+        niveles.nivelCorrecto(jugador.getNivel())
+    else:
+        niveles.nivelIncorrecto(jugador.getNivel())
 
     return nivelActual
 

@@ -5,9 +5,10 @@ from interfazJuego import *
 import os 
 from jugadorBeta import *
 from cargaDeConsignas import *
-from nivel import *
+from nivelesEnJuego import *
 
 def actualizarColumna(ventana,*columna):
+
     for e in ventana.element_list():
         if e.Type == 'column':
             if e.Visible == False and e.Key in columna:
@@ -47,6 +48,8 @@ def principal():
     consignas = AlmacenamientoConsignas()
     jugador = JugadorBeta ('Iván')
     imgBoton = os.path.join('multimedia','cuadro.png')
+    nivelesJugando = NivelesEnJuego (3)
+    
     ventana = sg.Window ('Juego Cervantes: Inicio',interfazDeInicio(imgBoton,jugador,consignas), size = (ancho,alto),element_justification='center')
     ventana.Finalize()
 
@@ -66,14 +69,16 @@ def principal():
             sg.popup('PUNTAJES en construcción')
         if (evento == 'volver'):
             actualizarColumna (ventana,'colInicio')
-        if (ventana['colInicio'].Visible==True):
-            if (evento == '0'):
-                jugador.incrementarNivel() 
-                try:           #Permite controlar el máximo de consignas cargadas
-                    pasarNivel(ventana,jugador,imgBoton,consignas)
-                except:
-                    break
-            else: print('no')
+        #if (ventana['colJugar'].Visible==True):
+        if (evento == '0'):
+            jugador.incrementarNivel() 
+            print (jugador.getNivel())
+            try:           #Permite controlar el máximo de consignas cargadas
+                pasarNivel(ventana,True,jugador,imgBoton,consignas,nivelesJugando)
+            except:
+                print (nivelesJugando.resultadoFinal())
+                #actualizarColumna(ventana,'colInicio')
+        #else: pasarNivel(ventana,False,jugador,imgBoton,consignas,nivelesJugando)
     ventana.Close()
 
 principal()
