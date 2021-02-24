@@ -3,6 +3,7 @@ class Jugador():
         self.__nombre = nombre
         self.__puntuacion = puntaje
         self.__respuestas= respuestas 
+        self.__nivel = 1
 
     def __str__(self):
         return f"{self.__nombre} - {self.__puntuacion}- {self.__respuestas}"
@@ -11,6 +12,12 @@ class Jugador():
 
     def getNombre(self):
         return self.__nombre
+    
+    def getNivel(self):
+        return self.__nivel
+    
+    def incrementarNivel(self):
+        self.__nivel +=1
     
     def getPuntaje(self):
         return self.__puntuacion
@@ -24,9 +31,5 @@ class Jugador():
     def cantrespuestas(self):
         return sum(self.__respuestas)
 
-
-jug=Jugador("Nico")
-print(jug.infoJugador())
-jug.responder(2,True)
-print(jug.infoJugador())     
-print(jug.cantrespuestas())
+lista = list(range(4))
+print (lista)
