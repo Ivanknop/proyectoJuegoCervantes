@@ -34,7 +34,7 @@ class InterfazJuego ():
         botonesPreguntas = self.crearBotones(self.getConsignas().consignaEnPosicion(nivelActual))   
         layout = [
             [sg.Text(titulo,font='Italic 16'),
-            sg.Button('MENÚ',key='menu'),sg.Button('volver',key='volver'),sg.Button('salir',key='salir')],
+            sg.Button('MENÚ',key='menu'),sg.Button('volver',key='volver')],
             #[sg.HorizontalSeparator(pad=None)],
             [sg.Text('NIVEL'+str(nivelActual),key='nivel')],
             [sg.Text(self.getConsignas().consignaEnPosicion(0)['pregunta'],key='nroPregunta')],
@@ -78,23 +78,13 @@ def inicio(jugador,consignas):
     ventana.Finalize()
     while True:
         evento, valor = ventana.read()
-        if (evento == None or evento =='salir'):
+        if (evento == None):
             break
+        if (evento == 'volver'):
+            ok = aviso('¿Realmente desea salir? Si lo hace perderá la puntuación actual',['sí','no'])
+            if ok=='_sí':
+                break
         if (evento == '0'):
             print('NIVEL ACTUAL: '+ str(interfaz.getJugador().getNivel()))
             interfaz.pasarNivel(ventana)
     ventana.Close()
-
-''' LO QUE SIGUE ABAJO VA EN ALGÚN LADO DE LA VENTANA'''
-       # if (evento == 'volver'):
-        #    actualizarColumna (ventana,'colInicio')
-        #if (ventana['colJugar'].Visible==True):
-       # if (evento == '0'):
-        #    jugador.incrementarNivel() 
-         #   print (jugador.getNivel())
-          #  try:           #Permite controlar el máximo de consignas cargadas
-           #     pasarNivel(ventana,True,jugador,imgBoton,consignas,nivelesJugando)
-            #except:
-             #   print (nivelesJugando.resultadoFinal())
-                #actualizarColumna(ventana,'colInicio')
-        #else: pasarNivel(ventana,False,jugador,imgBoton,consignas,nivelesJugando)
