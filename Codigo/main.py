@@ -10,5 +10,6 @@ def main():
             juego = inicio(jugador,consignas)
         except:
             break
+        
 if __name__ == '__main__':
     main()
