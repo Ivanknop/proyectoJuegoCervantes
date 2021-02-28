@@ -27,7 +27,7 @@ def aviso(mensaje = 'Este es un mensaje estandar', botones = ['Entendido']):
 
     botonLis = []
     for b in botones:
-        botonLis.extend([sg.Button(button_text=b, border_width=1, button_color=('black', '#f75404'), font=('Arial', 12), key=f'_{b}')])
+        botonLis.extend([sg.Button(button_text=b, border_width=1, button_color=('black', '#afad71'), font=('Arial', 12), key=f'_{b}')])
 
     layout.append(botonLis)
     popup = sg.Window('AVISO', layout, background_color='white', no_titlebar=True, keep_on_top=True,grab_anywhere=True, element_justification='center').Finalize()

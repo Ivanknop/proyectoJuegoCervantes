@@ -21,6 +21,9 @@ class Jugador():
     
     def getPuntaje(self):
         return self._puntuacion
+    
+    def sumarPuntaje(self,puntos):
+        self._puntuacion +=puntos
 
     def getRespuestas(self):
         return self._respuestas

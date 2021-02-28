@@ -30,8 +30,6 @@ class AlmacenamientoConsignas():
         try:
             fichero = open(self.rutaGuardado, 'rb')
             self.preguntas = pickle.load(fichero)
-            #for e in self.preguntas:
-             #   print (e)
             fichero.close()
         except:
             self.crearArchivo()

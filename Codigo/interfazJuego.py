@@ -39,7 +39,7 @@ class InterfazJuego ():
             [sg.Text('NIVEL'+str(nivelActual),key='nivel')],
             [sg.Text(self.getConsignas().consignaEnPosicion(0)['pregunta'],key='nroPregunta')],
             botonesPreguntas,
-            [sg.Text('JUGADOR '+ jugador.getNombre().upper(),key='jugNombre'),sg.Text('Puntaje: '+str(jugador.getPuntaje()),key='jugPje')],
+            [sg.Text('JUGADOR '+ jugador.getNombre().upper(),key='jugNombre'),sg.Text('Puntaje: '+str(jugador.getPuntaje()),size=(10,2)   ,key='jugPje')],
             [sg.Button('BONUS 1',key='bonus1'),sg.Button('BONUS 2',key='bonus1')]
             ]
         
@@ -51,40 +51,57 @@ class InterfazJuego ():
             botones.append(sg.Button(c['respuesta'+str(i+1)],image_filename=self.getBoton(),key=str(i)))
         random.shuffle(botones)
         return botones
+    
+    def actualizarPuntaje (self,ven,ok):
+        if ok:
+            self.getJugador().sumarPuntaje(30)
+        else:
+            self.getJugador().sumarPuntaje(-10)
+        ven['jugPje'].Update('Puntaje: '+str(self.getJugador().getPuntaje()))
 
-    def pasarNivel(self,ven):
+    def pasarNivel(self,ven):        
+        self.getJugador().incrementarNivel()
         nivelActual = self.getJugador().getNivel()
         ven['nivel'].Update('NIVEL'+str(nivelActual))
         ven['nroPregunta'].Update(self.getConsignas().consignaEnPosicion(nivelActual)['pregunta'])
         indices = [0,1,2,3]
         random.shuffle(indices)
-        #print (indices) #No logro que se randomice la actualización de los botones
-        for i in range(3):
-            ven[str(indices[i+1])].Update(self.getConsignas().consignaEnPosicion(nivelActual)['respuesta'+str(indices[i]+1)])
+        print (indices)
+        for i in range(4):
+            ven[str(indices[i])].Update(self.getConsignas().consignaEnPosicion(nivelActual)['respuesta'+str(indices[i]+1)])
         #if ok:
          #   niveles.nivelCorrecto(jugador.getNivel())
         #else:
          #   niveles.nivelIncorrecto(jugador.getNivel())
-        self.getJugador().incrementarNivel()
-        #return nivelActual
+        #return 
 
 def inicio(jugador,consignas):
     tema()
     alto = 500
     ancho = 700
     imgBoton = os.path.join('multimedia','cuadro.png')  
-    interfaz = InterfazJuego (imgBoton,jugador,consignas) 
+    interfaz = InterfazJuego (imgBoton,jugador,consignas)
+    totalNiveles=3
+    nivelesJugados = NivelesEnJuego(totalNiveles)
     ventana = sg.Window ('Juego Cervantes: Inicio',interfaz.getInterfaz(), size = (ancho,alto),element_justification='center')
     ventana.Finalize()
     while True:
         evento, valor = ventana.read()
         if (evento == None):
             break
+        
         if (evento == 'volver'):
             ok = aviso('¿Realmente desea salir? Si lo hace perderá la puntuación actual',['sí','no'])
             if ok=='_sí':
                 break
+        
         if (evento == '0'):
             print('NIVEL ACTUAL: '+ str(interfaz.getJugador().getNivel()))
             interfaz.pasarNivel(ventana)
+            interfaz.actualizarPuntaje(ventana,True)
+            totalNiveles  -= 1
+        if (totalNiveles == 0 ):
+            sg.popup('GANASTE')
+            
+            break
     ventana.Close()
