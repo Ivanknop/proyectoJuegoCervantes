@@ -1,6 +1,6 @@
 from interfazPrincipal import principal
 from interfazJuego import inicio
-
+import random
 
 def main():
 
@@ -13,3 +13,4 @@ def main():
         
 if __name__ == '__main__':
     main()
+

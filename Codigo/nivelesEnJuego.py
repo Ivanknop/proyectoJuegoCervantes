@@ -23,7 +23,7 @@ class NivelesEnJuego():
         self._correctos[pos] = puntos
     
     def nivelIncorrecto(self,pos):
-        self._correctos[pos]=-1
+        self._correctos[pos]=-10
     
     def verRespuestas(self):
         return self._correctos
