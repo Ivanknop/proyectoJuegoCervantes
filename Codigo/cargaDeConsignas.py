@@ -60,24 +60,7 @@ class AlmacenamientoConsignas():
         self.cargar()
         self.preguntas=[]
         self.__guardar()
+    
+    def getConsignas (self):
+        return self.preguntas
 
-#pregunta = ''
-#respuesta = ''
-##nivelInicial = []
-#seguir = ''
-#ok = True
-#archivo = AlmacenamientoConsignas()
-#archivo.imprimirPreguntas()
-#print (archivo.buscarPregunta('dos'))
-#print(archivo.consignaEnPosicion(1))
-#archivo.borrarPregunta(1)
-#archivo.imprimirPreguntas()
-'''
-while ok:
-    pregunta=    input ('Ingrese una consigna: ')
-    respuesta = input ('Ingrese la respuesta correcta: ')
-    archivo.agregarConsigna(pregunta,respuesta)
-    seguir = input ('¿continuar? ')
-    if (seguir != 's'):
-        ok = not ok
-'''

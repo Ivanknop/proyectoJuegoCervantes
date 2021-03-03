@@ -94,11 +94,11 @@ class InterfazJuego ():
         se actualiza el puntaje en pantalla
         '''
         if ok:
-            niveles.nivelCorrecto(self.getJugador().getNivel()-1,30)
-            self.getJugador().sumarPuntaje(30)
+            puntos = 30
         else:
-            niveles.nivelIncorrecto(self.getJugador().getNivel()-1)
-            self.getJugador().sumarPuntaje(-10)        
+            puntos = -10
+        niveles.puntuarNivel(self.getJugador().getNivel()-1,puntos)
+        self.getJugador().sumarPuntaje(puntos)      
         self.getJugador().incrementarNivel()
         self.actualizarBotones(ven)
         self.actualizarPuntaje(ven)
@@ -107,11 +107,10 @@ class InterfazJuego ():
         '''
         recibe una respuesta del jugador y la compara con la respuesta válida
         '''
-        print (respuestaJugador)
-        print (valida)
-        print (valida == respuestaJugador)
+        #print (respuestaJugador)
+        #print (valida)
+        #print (valida == respuestaJugador)
         return valida == respuestaJugador
-
 
 
 def inicio(jugador,consignas):
@@ -123,24 +122,11 @@ def inicio(jugador,consignas):
     quijote= os.path.join('multimedia','quijoteLogo2.png')
     
     totalNiveles=5
-    nivelActual = 0
-    
-    #LO QUE SIGUE A CONTINUACION ES PRUEBA
-    
-    indices = [1,2,3,4]
-    random.shuffle(indices)
-    listaPregs = []
-    validas = []
-    for i in range(5):
-        validas.append(consignas.consignaEnPosicion(i)['respuesta1'])
-        preguntaNivel=[]
-        for j in range(4):
-            preguntaNivel.append(consignas.consignaEnPosicion(i)['respuesta' + str(indices[j])])
-        listaPregs.append(preguntaNivel)
-        random.shuffle(indices)
-    interfaz = InterfazJuego (imgBoton,bonusTime,quijote,jugador,listaPregs)
+    nivelActual = jugador.getNivel()
+    nivelesJugados = NivelesEnJuego(totalNiveles)    
+    validas = nivelesJugados.crearNiveles(consignas)
+    interfaz = InterfazJuego (imgBoton,bonusTime,quijote,jugador,nivelesJugados.getNiveles())
 
-    nivelesJugados = NivelesEnJuego(totalNiveles)
     ventana = sg.Window ('Juego Cervantes: Inicio',interfaz.getInterfaz(), size = (ancho,alto),element_justification='center')
     ventana.Finalize()
     while True:
@@ -156,10 +142,11 @@ def inicio(jugador,consignas):
         if (evento in ['0','1','2','3']):
             print('NIVEL ACTUAL: '+ str(nivelActual))
             #Envía la lista de preguntas en la posición nivel Actual/Evento y la respuesta válida
+            ok = interfaz.evaluarRespuesta(nivelesJugados.getNiveles()[nivelActual][int(evento)],validas[nivelActual])
 
-            ok = interfaz.evaluarRespuesta(listaPregs[nivelActual][int(evento)],validas[nivelActual])
             interfaz.pasarNivel(ventana,nivelesJugados,ok)
             nivelActual +=1
+            print (nivelesJugados.verRespuestas())
         if (totalNiveles == nivelActual+1):
             sg.popup('Terminó \n RESULTADO FINAL: '+str(nivelesJugados.resultadoFinal()))
             

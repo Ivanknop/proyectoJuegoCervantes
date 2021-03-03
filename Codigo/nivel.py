@@ -6,30 +6,33 @@ No pueden modificarse los atributos
 """
 class Nivel():
 
-    def __init__(self, nivel, pregunta,respuestaValida,respuestasIncorrectas):
-        self.__nroNivel = nivel
-        self.__puntaje = 50
-        self.__pregunta = pregunta
-        self.__respuestaValida = respuestaValida
-        self.__respuestasIncorrectas = respuestasIncorrectas
+    def __init__(self, pregunta,respuestaValida,respuestasPosibles, nivel='fácil'):
+        self._nroNivel = nivel
+        self._puntaje = 50
+        self._pregunta = pregunta
+        self._respuestaValida = respuestaValida
+        self._respuestasPosibles = respuestasPosibles
     
+    def infoNivel(self):
+        return  f"{self._pregunta} - {self._respuestaValida}- {self._respuestasPosibles}"
+
     def getDificultad(self):
-        return self.__dificultad
+        return self._dificultad
 
     def getPuntaje(self):
-        return self.__puntaje
+        return self._puntaje
     
     def getNivel(self):
-        return self.__nroNivel
+        return self._nroNivel
 
     def getPregunta(self):
-        return self.__pregunta
+        return self._pregunta
 
     def getRespuestaValida (self):
-        return self.__respuestaValida
+        return self._respuestaValida
     
-    def getRespuestasIncorrectas(self):
-        return self.__respuestasIncorrectas
+    def getRespuestasPosibles(self):
+        return self._respuestasPosibles
 
     def evaluarRespuesta (self,respuesta):
         if (respuesta == self.getRespuestaValida()):
