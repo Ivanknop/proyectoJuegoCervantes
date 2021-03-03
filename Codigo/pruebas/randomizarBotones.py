@@ -13,6 +13,9 @@ class NuevoBoton():
 
     def get_key(self): #lo uso para acceder al boton pero creo es innecesario
         return self.key
+    
+    def set_key(self,nuevaKey):
+        self.key = nuevaKey
 
 def crearBotones(textoParaBotones):
     random.shuffle(textoParaBotones)
@@ -26,15 +29,26 @@ def crearBotones(textoParaBotones):
     return bot
 #    return botones
 
+def randomizarBotones (ven,botones,pos):
+    ven[e].Update(botones[e].set_key('A'))
+
 
 def actualizarLayout(textoParaBotones):
     layout =[
         [sg.Text('ACÁ VAMOS A RANDOMIZAR BOTONES',font=('Arial 12'),key='pato')],
-        #[botones[0].button],[botones[1].button],[botones[2].button],[botones[3].button]
         crearBotones(textoParaBotones),
-        [sg.Text('ACÁ VAMOS A RANDOMIZAR FOTONES',font=('Arial 12'),key='gato')]
     ]
     return layout
+
+respuestas = ['respuesta1','respuesta2','respuesta3']
+preguntas = [
+    ['respuesta1','respuestaA','respuestaB','respuestaC'],
+    ['respuesta2','respuestaD','respuestaE','respuestaF'],
+    ['respuesta3','respuestaG','respuestaH','respuestaI']
+    ]
+
+
+
 
 textoParaBotones = ['hola','chau','pato','araña']
 totBot = 4
@@ -45,18 +59,20 @@ while True:
     e ,value  = ven.read()
     if (e == None):
         break
-    else:
-        #ven[e].Update(visible=False)
-        random.shuffle(textoParaBotones)
-        for i in range (4):
-            ven.FindElement(str(i)).Update(textoParaBotones[i]) 
-        totBot -= 1
-    if (totBot == 0):
-        print('listo')
-        break
-    
+    if (e in ['0','1','2']):
+        print ('RESPUESTA: ' + str(respuestas[0]==preguntas[0][int(e)]))
+        #print (respuestas[int(e)])
+        #print (preguntas[0][1])
+        #print (respuestas[2]==preguntas[2][2])
+        randomizarBotones(ven,ven.FindElement('0'),e)
+        
 
-    
+
+    #if (e == 'ok'):
+     #   if (ven.FindElement('c').Get()==True): #Busca la key 'c' y si está habilitada, entra al if
+      #      print ('GANASTE')
+       # else:
+        #    print('PERDISTE')
 
 
 ven.Close()

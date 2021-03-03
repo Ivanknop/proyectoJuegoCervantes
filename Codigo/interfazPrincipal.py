@@ -19,10 +19,10 @@ def actualizarColumna(ventana,*columna):
                 ventana.FindElement(e.Key).update(visible=False)
 
 
-def interfazInicial(imgBoton):
+def interfazInicial(imgBoton,quijote):
     
     layout= [
-        [sg.Text ('BIENVENIDE!!',font=('Arial 30'),justification='center',key='bienvenido')],
+        [sg.Image (filename=quijote,size=(600,200),key='bienvenido')],
         [sg.Button('Jugar',image_filename=imgBoton,font=('Arial 16'),size=(12,3),key='jugar'),
         sg.Button('Ingresar como Docente',image_filename=imgBoton,font=('Arial 14'),size=(12,3),key='docente'),
         sg.Button('Puntuaciones',image_filename=imgBoton,font=('Arial 16'),size=(12,3),key='puntos'),
@@ -36,9 +36,10 @@ def principal():
     tema()
     consignas = AlmacenamientoConsignas()
     imgBoton = os.path.join('multimedia','cuadro.png')
+    quijote = os.path.join('multimedia','quijoteLogo.png')
     nivelesJugando = NivelesEnJuego (3)
     
-    ventana = sg.Window ('Juego Cervantes: Inicio',interfazInicial(imgBoton), size = (ancho,alto),element_justification='center')
+    ventana = sg.Window ('Juego Cervantes: Inicio',interfazInicial(imgBoton,quijote), size = (ancho,alto),element_justification='center')
     ventana.Finalize()
 
     while True:
@@ -53,8 +54,9 @@ def principal():
                 sg.popup('clave incorrecta \n Intente nuevamente')
         if (evento == 'jugar'):
             nombre = sg.popup_get_text('Ingrese su nombre')
-            jugador = Jugador(nombre)
-            break
+            if (nombre != ''):
+                jugador = Jugador(nombre)
+                break
         if (evento == 'puntos'):
             sg.popup('PUNTAJES en construcción')
     ventana.Close()

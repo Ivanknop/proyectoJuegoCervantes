@@ -1,9 +1,10 @@
 class Jugador():
     def __init__(self, nombre, puntaje = 0, respuestas = [False, False, False, False, False]):
+        
         self._nombre = nombre
         self._puntuacion = puntaje
         self._respuestas= respuestas 
-        self._nivel = 1
+        self._nivel = 0
 
     def __str__(self):
         return f"{self._nombre} - {self._puntuacion}- {self._respuestas}"

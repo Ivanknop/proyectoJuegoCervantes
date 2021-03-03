@@ -5,12 +5,12 @@ def tema():
     Configuración genérica del diseño de las interfaces que facilita el diseño. 
     Después se adapta a la especificidad de cada pestaña.
     '''
-    sg.LOOK_AND_FEEL_TABLE['juego'] = {'BACKGROUND': '#37CE67', #f9e4b7', #'#4f280a'
-                                            'TEXT': '#fff4c9',
+    sg.LOOK_AND_FEEL_TABLE['juego'] = {'BACKGROUND': '#F1A66A', #f9e4b7', #'#4f280a'
+                                            'TEXT': '#FFF66E',
                                             'INPUT': '#c7e78b',
                                             'TEXT_INPUT': '#000000',
                                             'SCROLL': '#c7e78b',
-                                            'BUTTON': ('black','#afad71'),
+                                            'BUTTON': ('#EFB810','#F0001F'),
                                             'PROGRESS': ('#01826B', '#D0D0D0'),
                                             'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
                                             }
@@ -23,7 +23,7 @@ def aviso(mensaje = 'Este es un mensaje estandar', botones = ['Entendido']):
     se componen de un '_' y el nombre recibido por parametro.
     Retorna el evento seleccionado (boton clickeado).'''
 
-    layout = [[sg.Text(mensaje, font=('Arial', 12), text_color='black', background_color='white')],]
+    layout = [[sg.Text(mensaje, font=('Arial', 12), text_color='black', background_color='#F1A66A')],]
 
     botonLis = []
     for b in botones:

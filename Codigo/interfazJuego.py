@@ -6,13 +6,19 @@ import pickle
 from cargaDeConsignas import *
 from nivelesEnJuego import *
 from Jugador import *
+from Bonus import *
 
 class InterfazJuego ():
-    '''Mega clase'''
-    def __init__(self, imgBoton,jugador,consignas):
+    '''Define la interfaz en la que se desarrolla la dinámica del juego
+    consignas es una matriz de niveles y respuestas por nivel. Jugador es clase Jugador
+    El resto son imágenes.
+    '''
+    def __init__(self, imgBoton,bonusTime,quijote,jugador,consignas):
         self._jugador = jugador
-        self._consignas = consignas
+        self._consignas = consignas #ahora es una matriz
         self._imagenBoton = imgBoton
+        self._imagenBonusTime = bonusTime
+        self._logo = quijote
     
     def getJugador (self):
         return self._jugador
@@ -25,104 +31,115 @@ class InterfazJuego ():
 
     def getBoton (self):
         return self._imagenBoton
+    
+    def getBonusTimeImg (self):
+        return self._imagenBonusTime
+    
+    def getLogo (self):
+        return self._logo
 
-    def nuevaPregunta (self):
-        nivelActual = self.getJugador().getNivel()
-        botonesPreguntas = self.crearBotones(self.getConsignas().consignaEnPosicion(nivelActual))   
-        
-        colPregunta =  [
-            [sg.Text('NIVEL'+str(nivelActual),key='nivel')],
-            [sg.Text(self.getConsignas().consignaEnPosicion(0)['pregunta'],key='nroPregunta')],
-            botonesPreguntas                  
-        ]
-
-        nuevaPregunta = [sg.Column(colPregunta,justification='center',visible=True,key='colPreg')]
-        return nuevaPregunta
+    def crearBotones(self,nivel):
+        '''
+        Crea botones con key 0,1,2,3 que se usará para ubicar la respuesta seleccionada en cada nivel.
+        '''
+        botones = []
+        for i in range(4):
+            botones.append(sg.Button(nivel[i],image_filename=self.getBoton(),key=str(i)))
+        random.shuffle(botones)
+        return botones
 
     def interfazJuego(self):
+        '''
+        nivelActual almacena el nivel en Juego. Es para mejor lectura.
+        jugador almacena al jugador en juego. Idem
+        Crea las columnas que serán usadas para crear la interfaz
+        colPregunta contiene los botones que sirven de respuesta a la pregunta principal. Utiliza el nivelActual
+        para guiarse en la matriz de nivelesEnJuego
+        '''
         nivelActual = self.getJugador().getNivel()
         jugador = self.getJugador()
         titulo = 'JUEGO DE PREGUNTAS SOBRE "EL QUIJOTE"'
         colJugador = [
             [sg.Text('JUGADOR '+ jugador.getNombre().upper(),key='jugNombre'),sg.Text('Puntaje: '+str(jugador.getPuntaje()),size=(10,2)   ,key='jugPje')],
-            [sg.Button('BONUS 1',key='bonus1'),sg.Button('BONUS 2',key='bonus1')]            
+            [sg.Button('BONUS 1',size=(10,2),key='bonus1'),sg.Button('',image_filename=self.getBonusTimeImg(),button_color=('black','#FF1133'),tooltip='MÁS TIEMPO',key='bonusTime')]            
         ]
         colSuperior=[
-            [sg.Text(titulo,font='Italic 16'),
+            [sg.Image(filename=self.getLogo(),size=(300,50)),
             sg.Button('MENÚ',key='menu'),sg.Button('volver',key='volver')]
         ]
+        colPregunta =  [
+            [sg.Text('NIVEL'+str(nivelActual),key='nivel')], 
+            self.crearBotones(self.getConsignas()[nivelActual]) 
+            ]
         layout = [
             [sg.Column(colSuperior,justification='center',key='colSup')],
-            self.nuevaPregunta(),
+            [sg.Column(colPregunta,justification='center',key='colPreg')],
             [sg.Column(colJugador,justification='center',key='colJug')]
             ]
         
         return layout
-
-    def crearBotones(self,c):
-        botones = []
-        for i in range(4):
-            botones.append(sg.Button(c['respuesta'+str(i+1)],image_filename=self.getBoton(),key=str(i)))
-        random.shuffle(botones)
-        return botones
     
     def actualizarPuntaje (self,ven):
         ven['jugPje'].Update('Puntaje: '+str(self.getJugador().getPuntaje()))
 
+    def actualizarBotones (self,ven):        
+        for i in range(4):
+            ven[str(i)].Update(self.getConsignas()[self.getJugador().getNivel()][i])
+
     def pasarNivel(self,ven,niveles,ok):
-        nivelActual = self.getJugador().getNivel()
+        '''
+        si OK = True, habilita el nivelCorrecto del nivel en juego; si no, el incorrecto.
+        jugador incrementa su nivel
+        se actualizan las respuestas mostradas en los botones
+        se actualiza el puntaje en pantalla
+        '''
         if ok:
-            niveles.nivelCorrecto(nivelActual-1,30)
+            niveles.nivelCorrecto(self.getJugador().getNivel()-1,30)
             self.getJugador().sumarPuntaje(30)
         else:
-            niveles.nivelIncorrecto(nivelActual-1)
+            niveles.nivelIncorrecto(self.getJugador().getNivel()-1)
             self.getJugador().sumarPuntaje(-10)        
         self.getJugador().incrementarNivel()
-        ven['nivel'].Update('NIVEL'+str(nivelActual))
-        ven['nroPregunta'].Update(self.getConsignas().consignaEnPosicion(nivelActual)['pregunta'])
-        indices = [0,1,2,3]
-        random.shuffle(indices)
-        for i in range(4):
-            ven[str(indices[i])].Update(self.getConsignas().consignaEnPosicion(nivelActual)['respuesta'+str(indices[i]+1)])
-
+        self.actualizarBotones(ven)
         self.actualizarPuntaje(ven)
 
-    def evaluarRespuesta(self,ven,e,p,ok):
-        if (p[int(e)] == ok):
-            return True
-        else:
-            return False
+    def evaluarRespuesta(self,respuestaJugador,valida):
+        '''
+        recibe una respuesta del jugador y la compara con la respuesta válida
+        '''
+        print (respuestaJugador)
+        print (valida)
+        print (valida == respuestaJugador)
+        return valida == respuestaJugador
+
+
 
 def inicio(jugador,consignas):
     tema()
-    alto = 500
+    bonusTime =os.path.join('multimedia','relojChico.png')  
+    alto = 400
     ancho = 700
     imgBoton = os.path.join('multimedia','cuadro.png')  
-    interfaz = InterfazJuego (imgBoton,jugador,consignas)
+    quijote= os.path.join('multimedia','quijoteLogo2.png')
+    
     totalNiveles=5
     nivelActual = 0
-    '''
-    LO QUE SIGUE A CONTINUACION ES PRUEBA
-    validas = [consignas.consignaEnPosicion(0)['respuesta1'],
-    consignas.consignaEnPosicion(1)['respuesta1'],
-    consignas.consignaEnPosicion(2)['respuesta1'],
-    consignas.consignaEnPosicion(3)['respuesta1'],
-    consignas.consignaEnPosicion(4)['respuesta1']]
     
+    #LO QUE SIGUE A CONTINUACION ES PRUEBA
+    
+    indices = [1,2,3,4]
+    random.shuffle(indices)
+    listaPregs = []
+    validas = []
+    for i in range(5):
+        validas.append(consignas.consignaEnPosicion(i)['respuesta1'])
+        preguntaNivel=[]
+        for j in range(4):
+            preguntaNivel.append(consignas.consignaEnPosicion(i)['respuesta' + str(indices[j])])
+        listaPregs.append(preguntaNivel)
+        random.shuffle(indices)
+    interfaz = InterfazJuego (imgBoton,bonusTime,quijote,jugador,listaPregs)
 
-    preg1 = [consignas.consignaEnPosicion(0)['respuesta1'],consignas.consignaEnPosicion(0)['respuesta2'],
-    consignas.consignaEnPosicion(0)['respuesta3'],consignas.consignaEnPosicion(0)['respuesta4']]
-    preg2 = [consignas.consignaEnPosicion(1)['respuesta1'],consignas.consignaEnPosicion(1)['respuesta2'],
-    consignas.consignaEnPosicion(1)['respuesta3'],consignas.consignaEnPosicion(1)['respuesta4']]
-    preg3 = [consignas.consignaEnPosicion(2)['respuesta1'],consignas.consignaEnPosicion(2)['respuesta2'],
-    consignas.consignaEnPosicion(2)['respuesta3'],consignas.consignaEnPosicion(2)['respuesta4']]
-    preg4 = [consignas.consignaEnPosicion(3)['respuesta1'],consignas.consignaEnPosicion(3)['respuesta2'],
-    consignas.consignaEnPosicion(3)['respuesta3'],consignas.consignaEnPosicion(3)['respuesta4']]
-    preg5 = [consignas.consignaEnPosicion(4)['respuesta1'],consignas.consignaEnPosicion(4)['respuesta2'],
-    consignas.consignaEnPosicion(4)['respuesta3'],consignas.consignaEnPosicion(4)['respuesta4']]
-
-    listaPregs = [preg1,preg2,preg3,preg4,preg5]
-    '''
     nivelesJugados = NivelesEnJuego(totalNiveles)
     ventana = sg.Window ('Juego Cervantes: Inicio',interfaz.getInterfaz(), size = (ancho,alto),element_justification='center')
     ventana.Finalize()
@@ -132,31 +149,21 @@ def inicio(jugador,consignas):
             break
         
         if (evento == 'volver'):
-            ok = aviso('¿Realmente desea salir? Si lo hace perderá la puntuación actual',['sí','no'])
-            if ok=='_sí':
+            ok = sg.popup_ok_cancel('¿Realmente desea salir? Si lo hace perderá la puntuación actual')
+            if ok=='OK':
                 break
         
         if (evento in ['0','1','2','3']):
-            #print (preg1)
-            print('NIVEL ACTUAL: '+ str(interfaz.getJugador().getNivel()))
-            if (evento =='0'):
-                interfaz.pasarNivel(ventana,nivelesJugados,True)
-            else:
-                interfaz.pasarNivel(ventana,nivelesJugados,False)
+            print('NIVEL ACTUAL: '+ str(nivelActual))
+            #Envía la lista de preguntas en la posición nivel Actual/Evento y la respuesta válida
+
+            ok = interfaz.evaluarRespuesta(listaPregs[nivelActual][int(evento)],validas[nivelActual])
+            interfaz.pasarNivel(ventana,nivelesJugados,ok)
             nivelActual +=1
-        if (totalNiveles == nivelActual):
+        if (totalNiveles == nivelActual+1):
             sg.popup('Terminó \n RESULTADO FINAL: '+str(nivelesJugados.resultadoFinal()))
             
             break
-        '''
-        if (evento in ['0','1','2','3']):
-            #if (interfaz.evaluarRespuesta(ventana,evento,listaPregs[nivelActual],validas[nivelActual])):
-            interfaz.pasarNivel(ventana,True)
-                #print (validas[nivelActual])
-                #print (listaPregs[nivelActual][int(evento)])
-            nivelActual +=1
-            #else:
-                #print ('Error')
-        '''
+
 
     ventana.Close()
