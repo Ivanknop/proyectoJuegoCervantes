@@ -138,19 +138,24 @@ def inicio(jugador,consignas):
             ok = sg.popup_ok_cancel('¿Realmente desea salir? Si lo hace perderá la puntuación actual')
             if ok=='OK':
                 break
-        
+
         if (evento in ['0','1','2','3']):
             print('NIVEL ACTUAL: '+ str(nivelActual))
             #Envía la lista de preguntas en la posición nivel Actual/Evento y la respuesta válida
             ok = interfaz.evaluarRespuesta(nivelesJugados.getNiveles()[nivelActual][int(evento)],validas[nivelActual])
-
-            interfaz.pasarNivel(ventana,nivelesJugados,ok)
-            nivelActual +=1
-            print (nivelesJugados.verRespuestas())
-        if (totalNiveles == nivelActual+1):
-            sg.popup('Terminó \n RESULTADO FINAL: '+str(nivelesJugados.resultadoFinal()))
+            try:
+                interfaz.pasarNivel(ventana,nivelesJugados,ok)
+                nivelActual +=1
+                print (nivelesJugados.verRespuestas())
+            except: 
+                sg.popup('Terminó \n RESULTADO FINAL: '+str(nivelesJugados.resultadoFinal()))
+                
+                print (nivelesJugados.verRespuestas())
+                break
+        #if (totalNiveles < jugador.getNivel()):
+         #   sg.popup('Terminó \n RESULTADO FINAL: '+str(nivelesJugados.resultadoFinal()))
             
-            break
+          #  break
 
 
     ventana.Close()

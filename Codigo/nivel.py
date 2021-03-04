@@ -38,7 +38,3 @@ class Nivel():
         if (respuesta == self.getRespuestaValida()):
             return self.getPuntaje()
         else: return 0
-
-#nuevoNivel = Nivel ('fácil',10,'¿cómo te llamás?','ivan')
-
-#print (nuevoNivel.evaluarRespuesta('ivan'))
