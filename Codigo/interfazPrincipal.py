@@ -28,7 +28,10 @@ def interfazInicial(imgBoton,quijote):
         sg.Button('Puntuaciones',image_filename=imgBoton,font=('Arial 16'),size=(12,3),key='puntos'),
         sg.Button('Salir',image_filename=imgBoton,font=('Arial 16'),size=(12,3),key='salir')]
     ]
-    return layout
+    version = [
+        [sg.Text('Versión 0.1 beta',pad=(80,80),justification='left')]
+        ]
+    return layout + version
 
 def principal():
     alto = 500

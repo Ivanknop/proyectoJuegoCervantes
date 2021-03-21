@@ -34,6 +34,3 @@ class Jugador():
       
     def cantrespuestas(self):
         return sum(self._respuestas)
-
-lista = list(range(4))
-print (lista)

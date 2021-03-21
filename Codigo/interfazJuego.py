@@ -7,11 +7,14 @@ from cargaDeConsignas import *
 from nivelesEnJuego import *
 from Jugador import *
 from Bonus import *
+import time
 
 class InterfazJuego ():
     '''Define la interfaz en la que se desarrolla la dinámica del juego
-    consignas es una matriz de niveles y respuestas por nivel. Jugador es clase Jugador
-    El resto son imágenes.
+    consignas es una matriz de niveles y respuestas por nivel. 
+    :param jugador: Objeto Jugador que contiene la configuración del mismo
+    :param consignas: Objeto que contiene las consignas que se usarán en la partida
+    :param imgBoton,bonusTime,quijote: imagenes de los botones
     '''
     def __init__(self, imgBoton,bonusTime,quijote,jugador,consignas):
         self._jugador = jugador
@@ -19,24 +22,24 @@ class InterfazJuego ():
         self._imagenBoton = imgBoton
         self._imagenBonusTime = bonusTime
         self._logo = quijote
-    
+        self._tiempoInicio = 0
+        self._tiempoFinal = 0   
+
+
     def getJugador (self):
         return self._jugador
-
     def getInterfaz(self):
         return self.interfazJuego()
-    
     def getConsignas(self):
         return self._consignas
-
     def getBoton (self):
         return self._imagenBoton
-    
     def getBonusTimeImg (self):
         return self._imagenBonusTime
-    
     def getLogo (self):
         return self._logo
+
+
 
     def crearBotones(self,nivel):
         '''
@@ -107,9 +110,7 @@ class InterfazJuego ():
         '''
         recibe una respuesta del jugador y la compara con la respuesta válida
         '''
-        #print (respuestaJugador)
-        #print (valida)
-        #print (valida == respuestaJugador)
+        sg.popup('La respuesta escogida '+str(respuestaJugador) + 'es '+ str(valida == respuestaJugador))
         return valida == respuestaJugador
 
 
@@ -152,10 +153,5 @@ def inicio(jugador,consignas):
                 
                 print (nivelesJugados.verRespuestas())
                 break
-        #if (totalNiveles < jugador.getNivel()):
-         #   sg.popup('Terminó \n RESULTADO FINAL: '+str(nivelesJugados.resultadoFinal()))
-            
-          #  break
-
 
     ventana.Close()
