@@ -43,7 +43,7 @@ def verConsignas (archivo):
         listaFinal = listaFinal + str(p)+ '\n' 
     consignas(listaFinal)
     
-def inicio():
+def inicioConsignas():
     altura = 500
     largo = 450
     tema()

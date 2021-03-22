@@ -52,7 +52,7 @@ def principal():
         if (evento == 'docente'):
             clave = sg.popup_get_text('Ingrese la clave',password_char='*')
             if (clave=='ivan'):
-                inicio()
+                inicioConsignas()
             else:
                 sg.popup('clave incorrecta \n Intente nuevamente')
         if (evento == 'jugar'):

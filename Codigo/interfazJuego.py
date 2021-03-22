@@ -8,6 +8,7 @@ from nivelesEnJuego import *
 from Jugador import *
 from Bonus import *
 import time
+from timer import *
 
 class InterfazJuego ():
     '''Define la interfaz en la que se desarrolla la dinámica del juego
@@ -38,9 +39,23 @@ class InterfazJuego ():
         return self._imagenBonusTime
     def getLogo (self):
         return self._logo
+    def getTiempoFinal(self):
+        return self._tiempoFinal
+    def getTiempoInicial(self):
+        return self._tiempoInicio
+        
+    def setTiempoFinal(self,nuevoTiempo):
+        self._tiempoFinal = nuevoTiempo
+    def setTiempoInicio(self,nuevoTiempo):
+        self._tiempoInicio = nuevoTiempo
 
-
-
+    def setTimer(self,minutos):
+        self.setTiempoInicio(time.time())
+        self.setTiempoFinal(self.getTiempoInicial() + minutos*60)
+    
+    def terminoTimer(self):
+        return time.time() > self.getTiempoFinal()
+    
     def crearBotones(self,nivel):
         '''
         Crea botones con key 0,1,2,3 que se usará para ubicar la respuesta seleccionada en cada nivel.
@@ -68,10 +83,14 @@ class InterfazJuego ():
         ]
         colSuperior=[
             [sg.Image(filename=self.getLogo(),size=(300,50)),
-            sg.Button('MENÚ',key='menu'),sg.Button('volver',key='volver')]
+            sg.Button('MENÚ',key='menu'),sg.Button('volver',key='volver')],
+
         ]
         colPregunta =  [
-            [sg.Text('NIVEL'+str(nivelActual),key='nivel')], 
+            [sg.Text('NIVEL'+str(nivelActual),key='nivel'),
+            sg.Text('Tiempo Jugado: ',key='a'),
+            sg.Text('00:00',key='timer'),
+            sg.Button('reset',key='reset')], 
             self.crearBotones(self.getConsignas()[nivelActual]) 
             ]
         layout = [
@@ -84,12 +103,15 @@ class InterfazJuego ():
     
     def actualizarPuntaje (self,ven):
         ven['jugPje'].Update('Puntaje: '+str(self.getJugador().getPuntaje()))
+    
+    def actualizarTimer(self,ven,cont):
+        ven['timer'].update('{:02d}:{:02d}'.format((cont // 100) // 60,(cont // 100) % 60,cont % 100))
 
     def actualizarBotones (self,ven):        
         for i in range(4):
             ven[str(i)].Update(self.getConsignas()[self.getJugador().getNivel()][i])
 
-    def pasarNivel(self,ven,niveles,ok):
+    def pasarNivel(self,ven,niveles,ok,reloj):
         '''
         si OK = True, habilita el nivelCorrecto del nivel en juego; si no, el incorrecto.
         jugador incrementa su nivel
@@ -105,6 +127,8 @@ class InterfazJuego ():
         self.getJugador().incrementarNivel()
         self.actualizarBotones(ven)
         self.actualizarPuntaje(ven)
+        self.setTimer(1)
+        self.actualizarTimer(ven,reloj.getContadorTiempo())
 
     def evaluarRespuesta(self,respuestaJugador,valida):
         '''
@@ -118,7 +142,7 @@ def inicio(jugador,consignas):
     tema()
     bonusTime =os.path.join('multimedia','relojChico.png')  
     alto = 400
-    ancho = 700
+    ancho = 1000
     imgBoton = os.path.join('multimedia','cuadro.png')  
     quijote= os.path.join('multimedia','quijoteLogo2.png')
     
@@ -130,11 +154,25 @@ def inicio(jugador,consignas):
 
     ventana = sg.Window ('Juego Cervantes: Inicio',interfaz.getInterfaz(), size = (ancho,alto),element_justification='center')
     ventana.Finalize()
+    interfaz.setTimer(1)
+    reloj = Reloj()
+    pausado = False
     while True:
-        evento, valor = ventana.read()
+        if not pausado:
+            evento,valor = ventana.read(timeout=10)
+            reloj.actualizarContadorTiempo()
+        else:
+            evento, valor = ventana.read()
+        interfaz.actualizarTimer(ventana,reloj.getContadorTiempo())
+        if (interfaz.terminoTimer()):
+            sg.popup('Se terminó el tiempo para este nivel')
+            #reloj.resetTiempo()
+            interfaz.pasarNivel(ventana,nivelesJugados,False,reloj)
+   
         if (evento == None):
             break
-        
+        if (evento == 'reset'):
+            reloj.resetTiempo()
         if (evento == 'volver'):
             ok = sg.popup_ok_cancel('¿Realmente desea salir? Si lo hace perderá la puntuación actual')
             if ok=='OK':
@@ -145,9 +183,11 @@ def inicio(jugador,consignas):
             #Envía la lista de preguntas en la posición nivel Actual/Evento y la respuesta válida
             ok = interfaz.evaluarRespuesta(nivelesJugados.getNiveles()[nivelActual][int(evento)],validas[nivelActual])
             try:
-                interfaz.pasarNivel(ventana,nivelesJugados,ok)
+                interfaz.pasarNivel(ventana,nivelesJugados,ok,reloj)
                 nivelActual +=1
                 print (nivelesJugados.verRespuestas())
+                #reloj.resetTiempo()
+                #interfaz.actualizarTimer(ventana,reloj.getTiempoEnCero())
             except: 
                 sg.popup('Terminó \n RESULTADO FINAL: '+str(nivelesJugados.resultadoFinal()))
                 
