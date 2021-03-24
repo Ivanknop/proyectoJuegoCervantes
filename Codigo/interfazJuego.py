@@ -9,6 +9,7 @@ from Jugador import *
 from Bonus import *
 import time
 from timer import *
+from Bonus import *
 
 class InterfazJuego ():
     '''Define la interfaz en la que se desarrolla la dinámica del juego
@@ -25,8 +26,10 @@ class InterfazJuego ():
         self._logo = quijote
         self._tiempoInicio = 0
         self._tiempoFinal = 0   
+        self.bonusTiempo = BonusTime()
 
-
+    def getBonusTime(self):
+        return self.bonusTiempo
     def getJugador (self):
         return self._jugador
     def getInterfaz(self):
@@ -39,6 +42,7 @@ class InterfazJuego ():
         return self._imagenBonusTime
     def getLogo (self):
         return self._logo
+
     def getTiempoFinal(self):
         return self._tiempoFinal
     def getTiempoInicial(self):
@@ -55,6 +59,9 @@ class InterfazJuego ():
     
     def terminoTimer(self):
         return time.time() > self.getTiempoFinal()
+    
+    def desHabilitarBonus(self,ven,bonus):
+        ven[bonus].update(visible=False)
     
     def crearBotones(self,nivel):
         '''
@@ -165,18 +172,29 @@ def inicio(jugador,consignas):
             evento, valor = ventana.read()
         interfaz.actualizarTimer(ventana,reloj.getContadorTiempo())
         if (interfaz.terminoTimer()):
-            sg.popup('Se terminó el tiempo para este nivel')
-            #reloj.resetTiempo()
+            ok = sg.popup_ok ('Se terminó el tiempo para este nivel')
+            if ok:
+                reloj.resetTiempo()
+            nivelActual += 1
             interfaz.pasarNivel(ventana,nivelesJugados,False,reloj)
    
         if (evento == None):
             break
+
         if (evento == 'reset'):
             reloj.resetTiempo()
+        
         if (evento == 'volver'):
             ok = sg.popup_ok_cancel('¿Realmente desea salir? Si lo hace perderá la puntuación actual')
             if ok=='OK':
                 break
+
+        if (evento == 'bonusTime'):
+            ok = sg.popup_ok_cancel ('¿Realmente desea utilizar el Bonus de Tiempo?')
+            if (ok=='OK' and interfaz.getBonusTime().getHabilitado()==True):
+                interfaz.getBonusTime().usarBonus()
+                reloj.resetTiempo()
+                interfaz.desHabilitarBonus(ventana,evento)
 
         if (evento in ['0','1','2','3']):
             print('NIVEL ACTUAL: '+ str(nivelActual))
@@ -186,7 +204,7 @@ def inicio(jugador,consignas):
                 interfaz.pasarNivel(ventana,nivelesJugados,ok,reloj)
                 nivelActual +=1
                 print (nivelesJugados.verRespuestas())
-                #reloj.resetTiempo()
+                reloj.resetTiempo()
                 #interfaz.actualizarTimer(ventana,reloj.getTiempoEnCero())
             except: 
                 sg.popup('Terminó \n RESULTADO FINAL: '+str(nivelesJugados.resultadoFinal()))

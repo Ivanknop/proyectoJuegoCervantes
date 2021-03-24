@@ -1,28 +1,28 @@
 import random
 class Bonus():
-    def __init__(self, habilitado=False):
-        self.hahilitado=habilitado
+    def __init__(self, habilitado):
+        self.habilitado=habilitado
 
     def usarBonus(self):
         pass
     
-    def gethabilitado(self):
-        return self.hahilitado
+    def getHabilitado(self):
+        return self.habilitado
 
     def setHabilitados(self):
-        self.hahilitado=not self.hahilitado
+        self.habilitado=False
 
-class Time(Bonus):
+class BonusTime(Bonus):
     def __init__(self):
         Bonus.__init__(self,True)
-        self.time=60
+        #self.time=60
 
-    def gethabilitado(self):
-        return super().gethabilitado()
+    def getHabilitado(self):
+        return super().getHabilitado()
 
     def usarBonus(self):
         super().setHabilitados()
-        return super().gethabilitado()
+        return super().getHabilitado()
 
 
 class Answer(Bonus):
