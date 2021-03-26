@@ -80,7 +80,7 @@ class InterfazJuego ():
     def crearImagenesNiveles(self,totNiveles = 5):
         imgNiveles = []
         for i in range(totNiveles):
-            imgNiveles.append(sg.Image(filename=self.getImagenesNivelesJugando(0),size=(30,30),key='imagen'+str(i)))
+            imgNiveles.append(sg.Image(filename=self.getImagenesNivelesJugando(0),tooltip='Nivel '+str(i+1),size=(30,30),key='imagen'+str(i)))
         return imgNiveles
     
     def interfazJuego(self):
@@ -94,21 +94,21 @@ class InterfazJuego ():
         nivelActual = self.getJugador().getNivel()
         jugador = self.getJugador()
         colJugador = [
-            [sg.Text('JUGADOR '+ jugador.getNombre().upper(),key='jugNombre'),
-            sg.Text('Puntaje: '+str(jugador.getPuntaje()),size=(10,2),key='jugPje')],
+            [sg.Text('JUGADOR '+ jugador.getNombre().upper(),font='MedievalSharp 12',key='jugNombre'),
+            sg.Text('Puntaje: '+str(jugador.getPuntaje()),font='MedievalSharp 10',size=(10,2),key='jugPje')],
             self.crearImagenesNiveles(),
-            [sg.Button('BONUS 1',size=(10,2),key='bonus1'),sg.Button('',image_filename=self.getBonusTimeImg(),button_color=('black','#FF1133'),tooltip='MÁS TIEMPO',key='bonusTime')]            
+            [sg.Text('BONUS DE TIEMPO',font='MedievalSharp 12',key='txtBonusTiempo'),
+            sg.Button('',image_filename=self.getBonusTimeImg(),button_color=('black','#FFAAAA'),tooltip='MÁS TIEMPO',key='bonusTime')]            
         ]
         colSuperior=[
             [sg.Image(filename=self.getLogo(),size=(300,50)),
-            sg.Button('MENÚ',key='menu'),sg.Button('volver',key='volver')],
+            sg.Button('MENÚ',font='MedievalSharp 10',key='menu'),sg.Button('volver',font='MedievalSharp 10',key='volver')],
             
         ]
         colPregunta =  [
-            [sg.Text('NIVEL'+str(nivelActual),key='nivel'),
-            sg.Text('Tiempo Jugado: ',key='a'),
-            sg.Text('00:00',key='timer'),
-            sg.Button('reset',key='reset')], 
+            [sg.Text('NIVEL '+str(nivelActual+1),font='MedievalSharp 20',key='nivel'),
+            sg.Text('Tiempo Jugado: ',font='MedievalSharp 10',key='a'),
+            sg.Text('00:00',font='MedievalSharp 20',key='timer')], 
             self.crearBotones(self.getConsignas()[nivelActual]) 
             ]
         layout = [
@@ -160,7 +160,7 @@ class InterfazJuego ():
         '''
         recibe una respuesta del jugador y la compara con la respuesta válida
         '''
-        sg.popup('La respuesta escogida '+str(respuestaJugador) + 'es '+ str(valida == respuestaJugador))
+        sg.popup('La respuesta escogida '+str(respuestaJugador) + 'es '+ str(valida == respuestaJugador),font='MedievalSharp 10')
         return valida == respuestaJugador
 
 
@@ -200,7 +200,7 @@ def inicio(jugador,consignas):
             evento, valor = ventana.read()
         interfaz.actualizarTimer(ventana,reloj.getContadorTiempo())
         if (interfaz.terminoTimer()):
-            ok = sg.popup_ok ('Se terminó el tiempo para este nivel')
+            ok = sg.popup_ok ('Se terminó el tiempo para este nivel',font='MedievalSharp 10')
             if ok:
                 reloj.resetTiempo()
             nivelActual += 1
@@ -208,17 +208,14 @@ def inicio(jugador,consignas):
    
         if (evento == None):
             break
-
-        if (evento == 'reset'):
-            reloj.resetTiempo()
         
         if (evento == 'volver'):
-            ok = sg.popup_ok_cancel('¿Realmente desea salir? Si lo hace perderá la puntuación actual')
+            ok = sg.popup_ok_cancel('¿Realmente desea salir? Si lo hace perderá la puntuación actual',font='MedievalSharp 10')
             if ok=='OK':
                 break
 
         if (evento == 'bonusTime'):
-            ok = sg.popup_ok_cancel ('¿Realmente desea utilizar el Bonus de Tiempo?')
+            ok = sg.popup_ok_cancel ('¿Realmente desea utilizar el Bonus de Tiempo?',font='MedievalSharp 10')
             if (ok=='OK' and interfaz.getBonusTime().getHabilitado()==True):
                 interfaz.getBonusTime().usarBonus()
                 reloj.resetTiempo()
@@ -235,9 +232,11 @@ def inicio(jugador,consignas):
                 reloj.resetTiempo()
                 #interfaz.actualizarTimer(ventana,reloj.getTiempoEnCero())
             except: 
-                sg.popup('Terminó \n RESULTADO FINAL: '+str(nivelesJugados.resultadoFinal()))
+                sg.popup('Terminó \n RESULTADO FINAL: '+str(nivelesJugados.resultadoFinal()),font='MedievalSharp 10')
                 
                 print (nivelesJugados.verRespuestas())
+                print (validas)
+                print (nivelesJugados.getNiveles())
                 break
 
     ventana.Close()

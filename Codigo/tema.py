@@ -6,11 +6,11 @@ def tema():
     Después se adapta a la especificidad de cada pestaña.
     '''
     sg.LOOK_AND_FEEL_TABLE['juego'] = {'BACKGROUND': '#F1A66A', #f9e4b7', #'#4f280a'
-                                            'TEXT': '#FFF66E',
+                                            'TEXT': '#FFFFFF',#FFF66E',
                                             'INPUT': '#c7e78b',
                                             'TEXT_INPUT': '#000000',
                                             'SCROLL': '#c7e78b',
-                                            'BUTTON': ('#EFB810','#F0001F'),
+                                            'BUTTON': ('#FFFFFF','#F0001F'), #('#EFB810','#F0001F'),
                                             'PROGRESS': ('#01826B', '#D0D0D0'),
                                             'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
                                             }
