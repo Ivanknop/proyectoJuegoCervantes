@@ -10,6 +10,8 @@ from Bonus import *
 import time
 from timer import *
 from Bonus import *
+from ayuda import explicacionAyuda
+from crearPdf import *
 
 class InterfazJuego ():
     '''Define la interfaz en la que se desarrolla la dinámica del juego
@@ -73,12 +75,12 @@ class InterfazJuego ():
         '''
         botones = []
         for i in range(4):
-            botones.append(sg.Button(nivel[i],image_filename=self.getBoton(),key=str(i)))
+            botones.append(sg.Button(nivel[i],image_filename=self.getBoton(),font='MedievalSharp 10',key=str(i)))
         random.shuffle(botones)
         return botones
 
     def crearImagenesNiveles(self,totNiveles = 5):
-        imgNiveles = []
+        imgNiveles = [sg.Text('NIVELES => ',font='MedievalSharp 15',tooltip='Gris = Sin jugar / Rojo = Mal / Azul = Bien',key='txtNiveles')]
         for i in range(totNiveles):
             imgNiveles.append(sg.Image(filename=self.getImagenesNivelesJugando(0),tooltip='Nivel '+str(i+1),size=(30,30),key='imagen'+str(i)))
         return imgNiveles
@@ -94,15 +96,15 @@ class InterfazJuego ():
         nivelActual = self.getJugador().getNivel()
         jugador = self.getJugador()
         colJugador = [
-            [sg.Text('JUGADOR '+ jugador.getNombre().upper(),font='MedievalSharp 12',key='jugNombre'),
-            sg.Text('Puntaje: '+str(jugador.getPuntaje()),font='MedievalSharp 10',size=(10,2),key='jugPje')],
+            [sg.Text('JUGADOR '+ jugador.getNombre().upper(),font='MedievalSharp 20',size=(15,1),key='jugNombre'),
+            sg.Text('Puntaje: '+str(jugador.getPuntaje()),font='MedievalSharp 20',size=(10,1),key='jugPje')],
             self.crearImagenesNiveles(),
-            [sg.Text('BONUS DE TIEMPO',font='MedievalSharp 12',key='txtBonusTiempo'),
-            sg.Button('',image_filename=self.getBonusTimeImg(),button_color=('black','#FFAAAA'),tooltip='MÁS TIEMPO',key='bonusTime')]            
+            [sg.Text('BONUS DE TIEMPO => ',font='MedievalSharp 12',key='txtBonusTiempo'),
+            sg.Button('',image_filename=self.getBonusTimeImg(),button_color=('black','#FFAAFF'),tooltip='MÁS TIEMPO',key='bonusTime')]            
         ]
         colSuperior=[
             [sg.Image(filename=self.getLogo(),size=(300,50)),
-            sg.Button('MENÚ',font='MedievalSharp 10',key='menu'),sg.Button('volver',font='MedievalSharp 10',key='volver')],
+            sg.Button('AYUDA',font='MedievalSharp 10',key='ayuda'),sg.Button('volver',font='MedievalSharp 10',key='volver')],
             
         ]
         colPregunta =  [
@@ -181,7 +183,7 @@ def inicio(jugador,consignas):
     nivelActual = jugador.getNivel()
     nivelesJugados = NivelesEnJuego(totalNiveles)    
     validas = nivelesJugados.crearNiveles(consignas)
-
+    respuestasDelJugador = []
     #interfaz = InterfazJuego (imgBoton,bonusTime,quijote,jugador,nivelesJugados.getNiveles())
 
     interfaz = InterfazJuego (jugador,nivelesJugados.getNiveles(),listaImagenes)
@@ -213,6 +215,9 @@ def inicio(jugador,consignas):
             ok = sg.popup_ok_cancel('¿Realmente desea salir? Si lo hace perderá la puntuación actual',font='MedievalSharp 10')
             if ok=='OK':
                 break
+        
+        if (evento == 'ayuda'):
+            explicacionAyuda('ivan')
 
         if (evento == 'bonusTime'):
             ok = sg.popup_ok_cancel ('¿Realmente desea utilizar el Bonus de Tiempo?',font='MedievalSharp 10')
@@ -225,6 +230,7 @@ def inicio(jugador,consignas):
             print('NIVEL ACTUAL: '+ str(nivelActual))
             #Envía la lista de preguntas en la posición nivel Actual/Evento y la respuesta válida
             ok = interfaz.evaluarRespuesta(nivelesJugados.getNiveles()[nivelActual][int(evento)],validas[nivelActual])
+            respuestasDelJugador.append(nivelesJugados.getNiveles()[nivelActual][int(evento)])
             try:
                 interfaz.pasarNivel(ventana,nivelesJugados,ok,reloj)
                 nivelActual +=1
@@ -232,11 +238,12 @@ def inicio(jugador,consignas):
                 reloj.resetTiempo()
                 #interfaz.actualizarTimer(ventana,reloj.getTiempoEnCero())
             except: 
+                textoRespuestas = []
+                for i in range(5):
+                    textoRespuestas.append ('Respuesta '+str(i+1)+':' + respuestasDelJugador[i])
                 sg.popup('Terminó \n RESULTADO FINAL: '+str(nivelesJugados.resultadoFinal()),font='MedievalSharp 10')
-                
-                print (nivelesJugados.verRespuestas())
-                print (validas)
-                print (nivelesJugados.getNiveles())
+                #sg.popup(textoRespuestas,font='MedievalSharp 10')
+                crearPdf(jugador.getNombre(),textoRespuestas)
                 break
 
     ventana.Close()

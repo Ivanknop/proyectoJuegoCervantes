@@ -1,7 +1,7 @@
 import PySimpleGUI as sg
 from tema import *
 
-def ayuda(nombre):
+def presentacion(nombre):
     layout = [
         [sg.Text('BIENVENIDE AL JUEGO DE PREGUNTAS Y RESPUESTAS',font='MedievalSharp 20')],
         [sg.Text('A lo largo de 5 niveles debereis comprobar vuestro saber y valía. \n'
@@ -12,12 +12,33 @@ def ayuda(nombre):
         ,font='MedievalSharp 15',size=(45,10),auto_size_text=True,justification='center')],
         [sg.Text('            ¡BUENA VENTURA '+nombre.upper()+' !',font='MedievalSharp 20',justification='right')],
         [sg.Button('Continuar',size = (10,2),pad=(200,0),key='continuar')]
-
     ]
-
     return layout
 
+def ayuda(nombre):
+    layout = [
+        [sg.Text('¿NECESITAS AYUDA?'+str(nombre),font='MedievalSharp 20')],
+        [sg.Text('DESPUÉS TE DIGO COMO... JEJE\n'
+        ,font='MedievalSharp 15',size=(45,10),auto_size_text=True,justification='center')],
+        [sg.Text('            ¡BUENA VENTURA '+nombre.upper()+' !',font='MedievalSharp 20',justification='right')],
+        [sg.Button('Continuar',size = (10,2),pad=(200,0),key='continuar')]
+    ]
+    return layout    
+
 def explicacionJuego(nombre):
+    altura = 500
+    largo = 400
+    tema()
+    ventana = sg.Window ('Juego Cervantes',presentacion(nombre), size = (altura,largo))
+    ventana.Finalize()
+    while True:
+        evento, value = ventana.read()
+        if (evento == None or evento == 'continuar') :
+            break
+        
+    ventana.Close()
+
+def explicacionAyuda(nombre):
     altura = 500
     largo = 400
     tema()
