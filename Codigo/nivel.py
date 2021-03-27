@@ -8,20 +8,13 @@ class Nivel():
 
     def __init__(self, pregunta,respuestaValida,respuestasPosibles, nivel='fácil'):
         self._nroNivel = nivel
-        self._puntaje = 50
         self._pregunta = pregunta
         self._respuestaValida = respuestaValida
         self._respuestasPosibles = respuestasPosibles
     
     def infoNivel(self):
         return  f"{self._pregunta} - {self._respuestaValida}- {self._respuestasPosibles}"
-
-    def getDificultad(self):
-        return self._dificultad
-
-    def getPuntaje(self):
-        return self._puntaje
-    
+  
     def getNivel(self):
         return self._nroNivel
 
@@ -33,8 +26,3 @@ class Nivel():
     
     def getRespuestasPosibles(self):
         return self._respuestasPosibles
-
-    def evaluarRespuesta (self,respuesta):
-        if (respuesta == self.getRespuestaValida()):
-            return self.getPuntaje()
-        else: return 0

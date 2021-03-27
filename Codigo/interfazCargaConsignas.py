@@ -7,22 +7,22 @@ import random
 
 def interfazPrincipal ():
     layout = [
-        [sg.Text('Agregue una nueva pregunta',font = ('Italic 16'),key='consignas')],
-        [sg.InputText('',font=('Italic 10'),key='newPreg',do_not_clear=False)],
-        [sg.Text('Agregue la respuesta correcta',font = ('Italic 16'),key='respuestas')],
-        [sg.InputText('',font=('Italic 10'),key='newRta',do_not_clear=False)],
-        [sg.Text('Respuesta Incorrecta 1',font = ('Italic 16'),key='mal1')],
-        [sg.InputText('',font=('Italic 10'),key='inc1',do_not_clear=False)],
-        [sg.Text('Respuesta Incorrecta 2',font = ('Italic 16'),key='mal2')],
-        [sg.InputText('',font=('Italic 10'),key='inc2',do_not_clear=False)],
-        [sg.Text('Respuesta Incorrecta 3',font = ('Italic 16'),key='mal3')],
-        [sg.InputText('',font=('Italic 10'),key='inc3',do_not_clear=False)]
+        [sg.Text('Agregue una nueva pregunta',font='MedievalSharp 10',key='consignas')],
+        [sg.InputText('',font='MedievalSharp 10',key='newPreg',do_not_clear=False)],
+        [sg.Text('Agregue la respuesta correcta',font='MedievalSharp 10',key='respuestas')],
+        [sg.InputText('',font='MedievalSharp 10',key='newRta',do_not_clear=False)],
+        [sg.Text('Respuesta Incorrecta 1',font='MedievalSharp 10',key='mal1')],
+        [sg.InputText('',font='MedievalSharp 10',key='inc1',do_not_clear=False)],
+        [sg.Text('Respuesta Incorrecta 2',font='MedievalSharp 10',key='mal2')],
+        [sg.InputText('',font='MedievalSharp 10',key='inc2',do_not_clear=False)],
+        [sg.Text('Respuesta Incorrecta 3',font='MedievalSharp 10',key='mal3')],
+        [sg.InputText('',font='MedievalSharp 10',key='inc3',do_not_clear=False)]
     ]
     layoutBotones = [
-        [sg.Button('Agregar Consigna',size=(10,2),border_width=1,key = 'preguntas'),
-        sg.Button('ver preguntas',size=(10,2),border_width=1,key = 'imprimir'),
-        sg.Button('Vacias Consginas',size=(10,2),border_width=1,key ='vaciar'),
-        sg.Button('Salir',size=(10,2),border_width=1,key = 'salir')
+        [sg.Button('Agregar Consigna',font='MedievalSharp 10',size=(10,2),border_width=1,key = 'preguntas'),
+        sg.Button('ver preguntas',font='MedievalSharp 10',size=(10,2),border_width=1,key = 'imprimir'),
+        sg.Button('Vacias Consginas',font='MedievalSharp 10',size=(10,2),border_width=1,key ='vaciar'),
+        sg.Button('Salir',font='MedievalSharp 10',size=(10,2),border_width=1,key = 'salir')
         ]
     ]
     colPreguntas= layout

@@ -1,9 +1,7 @@
 import PySimpleGUI as sg
 import random
-from nivel import *
-from tema import *
+from tema import tema
 import pickle
-from cargaDeConsignas import *
 from nivelesEnJuego import *
 from Jugador import *
 from Bonus import *
@@ -11,7 +9,7 @@ import time
 from timer import *
 from Bonus import *
 from ayuda import explicacionAyuda
-from crearPdf import *
+from crearPdf import crearPdf
 
 class InterfazJuego ():
     '''Define la interfaz en la que se desarrolla la dinámica del juego
@@ -20,10 +18,9 @@ class InterfazJuego ():
     :param consignas: Objeto que contiene las consignas que se usarán en la partida
     :param imagenes: una lista de todas las imágenes en juego
     '''
-    #def __init__(self, imgBoton,bonusTime,quijote,jugador,consignas):
-    def __init__(self, jugador,consignas,imagenes=[]):
+    def __init__(self, jugador,consignas,preguntas,imagenes=[]):
         self._jugador = jugador
-        self._consignas = consignas #ahora es una matriz
+        self._consignas = consignas
         self._logo = imagenes[0]
         self._imagenBoton = imagenes[1]
         self._imagenBonusTime = imagenes[2]
@@ -31,6 +28,7 @@ class InterfazJuego ():
         self._tiempoInicio = 0
         self._tiempoFinal = 0   
         self.bonusTiempo = BonusTime()
+        self._preguntas = preguntas
 
     def getBonusTime(self):
         return self.bonusTiempo
@@ -40,6 +38,8 @@ class InterfazJuego ():
         return self.interfazJuego()
     def getConsignas(self):
         return self._consignas
+    def getPreguntas(self):
+        return self._preguntas
     def getBoton (self):
         return self._imagenBoton
     def getBonusTimeImg (self):
@@ -48,7 +48,6 @@ class InterfazJuego ():
         return self._logo
     def getImagenesNivelesJugando (self,pos):
         return self._imagenesNivelesJugados[pos]
-
     def getTiempoFinal(self):
         return self._tiempoFinal
     def getTiempoInicial(self):
@@ -104,13 +103,15 @@ class InterfazJuego ():
         ]
         colSuperior=[
             [sg.Image(filename=self.getLogo(),size=(300,50)),
-            sg.Button('AYUDA',font='MedievalSharp 10',key='ayuda'),sg.Button('volver',font='MedievalSharp 10',key='volver')],
+            sg.Button('AYUDA',font='MedievalSharp 10',key='ayuda'),sg.Button('SALIR',font='MedievalSharp 10',key='volver')],
             
         ]
         colPregunta =  [
             [sg.Text('NIVEL '+str(nivelActual+1),font='MedievalSharp 20',key='nivel'),
             sg.Text('Tiempo Jugado: ',font='MedievalSharp 10',key='a'),
-            sg.Text('00:00',font='MedievalSharp 20',key='timer')], 
+            sg.Text('00:00',font='MedievalSharp 20',key='timer')],
+            [sg.Text('PREGUNTA => ',font='MedievalSharp 20',key='txtPregunta'),
+            sg.Text(self.getPreguntas()[nivelActual],key='cambiarPreg')], 
             self.crearBotones(self.getConsignas()[nivelActual]) 
             ]
         layout = [
@@ -137,6 +138,9 @@ class InterfazJuego ():
         else:
             ven['imagen'+str(nivel)].Update(self.getImagenesNivelesJugando(2))
 
+    def actualizarPreguntas(self,ven):
+        ven['cambiarPreg'].Update(self.getPreguntas()[self.getJugador().getNivel()])
+
     def pasarNivel(self,ven,niveles,ok,reloj):
         '''
         si OK = True, habilita el nivelCorrecto del nivel en juego; si no, el incorrecto.
@@ -145,16 +149,17 @@ class InterfazJuego ():
         se actualiza el puntaje en pantalla
         '''
         if ok:
-            puntos = 30
+            puntos = 60-reloj.getContadorTiempo()//100
             
         else:
-            puntos = -10
+            puntos = -((60-reloj.getContadorTiempo()//100)//5)
         niveles.puntuarNivel(self.getJugador().getNivel()-1,puntos)
         self.actualizarImagenesNiveles(ven,self.getJugador().getNivel(),ok)
         self.getJugador().sumarPuntaje(puntos)      
         self.getJugador().incrementarNivel()
         self.actualizarBotones(ven)
         self.actualizarPuntaje(ven)
+        self.actualizarPreguntas(ven)
         self.setTimer(1)
         self.actualizarTimer(ven,reloj.getContadorTiempo())
 
@@ -170,7 +175,7 @@ def inicio(jugador,consignas):
     tema()
     imgBonusTime =os.path.join('multimedia','relojChico.png')  
     alto = 400
-    ancho = 1000
+    ancho = 800
     imgBoton = os.path.join('multimedia','cuadro.png')  
     quijote= os.path.join('multimedia','quijoteLogo2.png')
     imgSinJugar = os.path.join('multimedia','sinJugar.png')
@@ -182,11 +187,11 @@ def inicio(jugador,consignas):
     totalNiveles=5
     nivelActual = jugador.getNivel()
     nivelesJugados = NivelesEnJuego(totalNiveles)    
-    validas = nivelesJugados.crearNiveles(consignas)
-    respuestasDelJugador = []
-    #interfaz = InterfazJuego (imgBoton,bonusTime,quijote,jugador,nivelesJugados.getNiveles())
+    validas, preguntas = nivelesJugados.crearNiveles(consignas)
 
-    interfaz = InterfazJuego (jugador,nivelesJugados.getNiveles(),listaImagenes)
+    respuestasDelJugador = []
+
+    interfaz = InterfazJuego (jugador,nivelesJugados.getNiveles(),preguntas,listaImagenes)
 
 
     ventana = sg.Window ('Juego Cervantes: Inicio',interfaz.getInterfaz(), size = (ancho,alto),element_justification='center')
@@ -227,23 +232,21 @@ def inicio(jugador,consignas):
                 interfaz.desHabilitarBonus(ventana,evento)
 
         if (evento in ['0','1','2','3']):
-            print('NIVEL ACTUAL: '+ str(nivelActual))
             #Envía la lista de preguntas en la posición nivel Actual/Evento y la respuesta válida
             ok = interfaz.evaluarRespuesta(nivelesJugados.getNiveles()[nivelActual][int(evento)],validas[nivelActual])
+            
             respuestasDelJugador.append(nivelesJugados.getNiveles()[nivelActual][int(evento)])
             try:
                 interfaz.pasarNivel(ventana,nivelesJugados,ok,reloj)
                 nivelActual +=1
-                print (nivelesJugados.verRespuestas())
                 reloj.resetTiempo()
-                #interfaz.actualizarTimer(ventana,reloj.getTiempoEnCero())
             except: 
                 textoRespuestas = []
                 for i in range(5):
                     textoRespuestas.append ('Respuesta '+str(i+1)+':' + respuestasDelJugador[i])
                 sg.popup('Terminó \n RESULTADO FINAL: '+str(nivelesJugados.resultadoFinal()),font='MedievalSharp 10')
-                #sg.popup(textoRespuestas,font='MedievalSharp 10')
-                crearPdf(jugador.getNombre(),textoRespuestas)
+                
+                crearPdf(jugador.getNombre(),textoRespuestas,validas,nivelesJugados.resultadoFinal())
                 break
 
     ventana.Close()

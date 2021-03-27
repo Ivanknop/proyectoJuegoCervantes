@@ -51,8 +51,10 @@ class NivelesEnJuego():
         random.shuffle(indices)
         listaPregs = []
         validas = []
+        preguntas = []
         for i in range(self.getTotalNiveles()):
             validas.append(consignas.consignaEnPosicion(i)['respuesta1'])
+            preguntas.append(consignas.consignaEnPosicion(i)['pregunta'])
             preguntaNivel=[]
             for j in range(4):
                 preguntaNivel.append(consignas.consignaEnPosicion(i)['respuesta' + str(indices[j])])
@@ -62,5 +64,4 @@ class NivelesEnJuego():
         for i in range(self.getTotalNiveles()):
             nuevoNivel = Nivel(consignas.consignaEnPosicion(i)['pregunta'],validas[i],listaPregs[i])
             self.agregarNivel(nuevoNivel.getRespuestasPosibles())
-        
-        return validas
+        return validas, preguntas

@@ -36,9 +36,7 @@ class Reloj ():
     
     def retomar(self):
         self.setPausar()
-        self.contadorTiempo = int(round(time.time() * 100)) - self.getTiempoPausado()
-        
-
+        self.contadorTiempo = int(round(time.time() * 100)) - self.getTiempoPausado()     
 
     def actualizarContadorTiempo(self):
         self.contadorTiempo = int(round(time.time() * 100)) - self.getTiempoActual()
@@ -47,8 +45,6 @@ class Reloj ():
         self.contadorTiempo = 0
         self.tiempoActual = int(round(time.time() * 100))
     
-    def seTerminoTimer(self):
-        return time.time() > self.tiempoFinalizacion()
 
 '''
 reloj = Reloj()

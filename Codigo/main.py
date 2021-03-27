@@ -1,7 +1,7 @@
 from interfazPrincipal import principal
 from interfazJuego import inicio
 import random
-from ayuda import *
+from ayuda import explicacionJuego
 
 def main():
 
@@ -9,7 +9,7 @@ def main():
         try:
             jugador, consignas = principal()
             explicacionJuego((jugador.getNombre()))
-            juego = inicio(jugador,consignas)
+            inicio(jugador,consignas)
         except:
             break
         

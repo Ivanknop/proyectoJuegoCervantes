@@ -24,7 +24,7 @@ class BonusTime(Bonus):
         super().setHabilitados()
         return super().getHabilitado()
 
-
+'''
 class Answer(Bonus):
     def __init__(self):
         Bonus.__init__(self,True)
@@ -43,7 +43,7 @@ class Answer(Bonus):
         l.pop()
         l.pop()
         return l
-'''
+
 unaLista=list(range(5))
 a=Answer()
 print(a.gethabilitado())
