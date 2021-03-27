@@ -1,2 +1,12 @@
 # proyectoJuegoCervantes
-Proyecto de juego tipo "Pulsaciones" para T.P. de profesorado en Letras
+Proyecto de juego de preguntas y respuestas para el Profesorado de Letras
+
+Utiliza las librerías:
+reportLab
+PySimpleGUI
+PIL
+
+Utiliza la font:
+MedievalSharp
+
+Todo es open source
