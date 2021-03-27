@@ -3,8 +3,8 @@ import random
 from tema import tema
 import pickle
 from nivelesEnJuego import *
-from Jugador import *
-from Bonus import *
+from Jugador import Jugador
+from Bonus import BonusTime
 import time
 from timer import *
 from Bonus import *
@@ -27,7 +27,7 @@ class InterfazJuego ():
         self._imagenesNivelesJugados = [imagenes[3],imagenes[4],imagenes[5]]
         self._tiempoInicio = 0
         self._tiempoFinal = 0   
-        self.bonusTiempo = BonusTime()
+        self.bonusTiempo = BonusTime(True)
         self._preguntas = preguntas
 
     def getBonusTime(self):
@@ -95,8 +95,8 @@ class InterfazJuego ():
         nivelActual = self.getJugador().getNivel()
         jugador = self.getJugador()
         colJugador = [
-            [sg.Text('JUGADOR '+ jugador.getNombre().upper(),font='MedievalSharp 20',size=(15,1),key='jugNombre'),
-            sg.Text('Puntaje: '+str(jugador.getPuntaje()),font='MedievalSharp 20',size=(10,1),key='jugPje')],
+            [sg.Text('JUGADOR => '+ jugador.getNombre().upper(),font='MedievalSharp 15',auto_size_text=True,key='jugNombre')],
+            [sg.Text('Puntaje => '+str(jugador.getPuntaje()),font='MedievalSharp 20',size=(10,1),key='jugPje')],
             self.crearImagenesNiveles(),
             [sg.Text('BONUS DE TIEMPO => ',font='MedievalSharp 12',key='txtBonusTiempo'),
             sg.Button('',image_filename=self.getBonusTimeImg(),button_color=('black','#FFAAFF'),tooltip='MÁS TIEMPO',key='bonusTime')]            
@@ -126,7 +126,7 @@ class InterfazJuego ():
         ven['jugPje'].Update('Puntaje: '+str(self.getJugador().getPuntaje()))
     
     def actualizarTimer(self,ven,cont):
-        ven['timer'].update('{:02d}:{:02d}'.format((cont // 100) // 60,(cont // 100) % 60,cont % 100))
+        ven['timer'].update('{:02d}:{:02d}'.format((cont // 100) // 60,(cont // 100) % 60))
 
     def actualizarBotones (self,ven):        
         for i in range(4):
@@ -174,7 +174,7 @@ class InterfazJuego ():
 def inicio(jugador,consignas):
     tema()
     imgBonusTime =os.path.join('multimedia','relojChico.png')  
-    alto = 400
+    alto = 450
     ancho = 800
     imgBoton = os.path.join('multimedia','cuadro.png')  
     quijote= os.path.join('multimedia','quijoteLogo2.png')
@@ -234,7 +234,7 @@ def inicio(jugador,consignas):
         if (evento in ['0','1','2','3']):
             #Envía la lista de preguntas en la posición nivel Actual/Evento y la respuesta válida
             ok = interfaz.evaluarRespuesta(nivelesJugados.getNiveles()[nivelActual][int(evento)],validas[nivelActual])
-            
+
             respuestasDelJugador.append(nivelesJugados.getNiveles()[nivelActual][int(evento)])
             try:
                 interfaz.pasarNivel(ventana,nivelesJugados,ok,reloj)
@@ -246,7 +246,7 @@ def inicio(jugador,consignas):
                     textoRespuestas.append ('Respuesta '+str(i+1)+':' + respuestasDelJugador[i])
                 sg.popup('Terminó \n RESULTADO FINAL: '+str(nivelesJugados.resultadoFinal()),font='MedievalSharp 10')
                 
-                crearPdf(jugador.getNombre(),textoRespuestas,validas,nivelesJugados.resultadoFinal())
+                crearPdf(jugador.getNombre(),textoRespuestas,validas,nivelesJugados.resultadoFinal(),time.strftime('%d/%m/%y %H:%M:%S'))
                 break
 
     ventana.Close()

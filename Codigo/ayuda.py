@@ -1,7 +1,11 @@
 import PySimpleGUI as sg
-from tema import *
+from tema import tema
 
 def presentacion(nombre):
+    '''
+    Introducción seteada al juego.
+    param: nombre. Personaliza la Ayuda
+    '''
     layout = [
         [sg.Text('BIENVENIDE AL JUEGO DE PREGUNTAS Y RESPUESTAS',font='MedievalSharp 20')],
         [sg.Text('A lo largo de 5 niveles debereis comprobar vuestro saber y valía. \n'
@@ -16,6 +20,10 @@ def presentacion(nombre):
     return layout
 
 def ayuda(nombre):
+    '''
+    Ayuda seteada al juego.
+    param: nombre. Personaliza la Ayuda
+    '''
     layout = [
         [sg.Text('¿NECESITAS AYUDA?'+str(nombre),font='MedievalSharp 20')],
         [sg.Text('DESPUÉS TE DIGO COMO... JEJE\n'

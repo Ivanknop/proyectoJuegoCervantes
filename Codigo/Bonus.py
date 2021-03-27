@@ -1,28 +1,15 @@
-import random
-class Bonus():
-    def __init__(self, habilitado):
-        self.habilitado=habilitado
+class BonusTime():
+    def __init__(self,habilitado):
+        self.habilitado= habilitado
 
-    def usarBonus(self):
-        pass
-    
     def getHabilitado(self):
         return self.habilitado
-
-    def setHabilitados(self):
-        self.habilitado=False
-
-class BonusTime(Bonus):
-    def __init__(self):
-        Bonus.__init__(self,True)
-        #self.time=60
-
-    def getHabilitado(self):
-        return super().getHabilitado()
+    def desHabilitar(self):
+        self.habilitado = False
 
     def usarBonus(self):
-        super().setHabilitados()
-        return super().getHabilitado()
+        self.desHabilitar()
+        return self.getHabilitado()
 
 '''
 class Answer(Bonus):
@@ -44,11 +31,4 @@ class Answer(Bonus):
         l.pop()
         return l
 
-unaLista=list(range(5))
-a=Answer()
-print(a.gethabilitado())
-print(unaLista)
-l=a.usarBonus(unaLista)
-print(l)
-print(a.gethabilitado())
 '''

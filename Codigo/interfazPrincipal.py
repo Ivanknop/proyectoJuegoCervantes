@@ -1,23 +1,11 @@
 import PySimpleGUI as sg
-from tema import *
+from tema import tema
 from interfazCargaConsignas import *
 from interfazJuego import *
 import os 
 from Jugador import *
 from cargaDeConsignas import *
 from nivelesEnJuego import *
-
-def actualizarColumna(ventana,*columna):
-
-    for e in ventana.element_list():
-        if e.Type == 'column':
-            if e.Visible == False and e.Key in columna:
-                ventana.FindElement (e.Key).update(visible=True)
-            elif e.Key in columna:
-                ventana.FindElement(e.Key).update(visible=True)
-            else:
-                ventana.FindElement(e.Key).update(visible=False)
-
 
 def interfazInicial(imgBoton,quijote):
     
@@ -57,11 +45,11 @@ def principal():
         if (evento == 'jugar'):
             
             nombre = sg.popup_get_text('Ingrese su nombre',font='MedievalSharp 10')
-            if (nombre != ''):
+            if (nombre != '') and (len(nombre)>2) and (len(nombre)<20):
                 jugador = Jugador(nombre)
                 break
             else:
-                sg.popup('El nombre debe tener algún caracter',font='MedievalSharp 10')
+                sg.popup('El nombre debe tener entre 3 y 30 caracteres',font='MedievalSharp 10')
         if (evento == 'puntos'):
             sg.popup('PUNTAJES en construcción',font='MedievalSharp 10')
     ventana.Close()
