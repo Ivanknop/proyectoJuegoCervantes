@@ -46,7 +46,7 @@ def principal():
             
             nombre = sg.popup_get_text('Ingrese su nombre',font='MedievalSharp 10')
             if (nombre != '') and (len(nombre)>2) and (len(nombre)<20):
-                jugador = Jugador(nombre)
+                jugador = Jugador(nombre.upper())
                 break
             else:
                 sg.popup('El nombre debe tener entre 3 y 30 caracteres',font='MedievalSharp 10')

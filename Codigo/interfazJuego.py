@@ -5,7 +5,6 @@ import pickle
 from nivelesEnJuego import *
 from Jugador import Jugador
 from Bonus import BonusTime
-import time
 from timer import *
 from Bonus import *
 from ayuda import explicacionAyuda
@@ -18,17 +17,16 @@ class InterfazJuego ():
     :param consignas: Objeto que contiene las consignas que se usarán en la partida
     :param imagenes: una lista de todas las imágenes en juego
     '''
-    def __init__(self, jugador,consignas,preguntas,imagenes=[]):
+    def __init__(self, jugador,consignas,preguntas,reloj,imagenes=[]):
         self._jugador = jugador
         self._consignas = consignas
         self._logo = imagenes[0]
         self._imagenBoton = imagenes[1]
         self._imagenBonusTime = imagenes[2]
         self._imagenesNivelesJugados = [imagenes[3],imagenes[4],imagenes[5]]
-        self._tiempoInicio = 0
-        self._tiempoFinal = 0   
         self.bonusTiempo = BonusTime(True)
         self._preguntas = preguntas
+        self._reloj = reloj
 
     def getBonusTime(self):
         return self.bonusTiempo
@@ -48,23 +46,9 @@ class InterfazJuego ():
         return self._logo
     def getImagenesNivelesJugando (self,pos):
         return self._imagenesNivelesJugados[pos]
-    def getTiempoFinal(self):
-        return self._tiempoFinal
-    def getTiempoInicial(self):
-        return self._tiempoInicio
+    def getReloj(self):
+        return self._reloj
         
-    def setTiempoFinal(self,nuevoTiempo):
-        self._tiempoFinal = nuevoTiempo
-    def setTiempoInicio(self,nuevoTiempo):
-        self._tiempoInicio = nuevoTiempo
-
-    def setTimer(self,minutos):
-        self.setTiempoInicio(time.time())
-        self.setTiempoFinal(self.getTiempoInicial() + minutos*60)
-    
-    def terminoTimer(self):
-        return time.time() > self.getTiempoFinal()
-    
     def desHabilitarBonus(self,ven,bonus):
         ven[bonus].update(visible=False)
     
@@ -95,8 +79,8 @@ class InterfazJuego ():
         nivelActual = self.getJugador().getNivel()
         jugador = self.getJugador()
         colJugador = [
-            [sg.Text('JUGADOR => '+ jugador.getNombre().upper(),font='MedievalSharp 15',auto_size_text=True,key='jugNombre')],
-            [sg.Text('Puntaje => '+str(jugador.getPuntaje()),font='MedievalSharp 20',size=(10,1),key='jugPje')],
+            [sg.Text('JUGADOR => '+ jugador.getNombre(),font='MedievalSharp 15',auto_size_text=True,key='jugNombre')],
+            [sg.Text('Puntaje => '+str(jugador.getPuntaje()),font='MedievalSharp 20',auto_size_text=True,key='jugPje')],
             self.crearImagenesNiveles(),
             [sg.Text('BONUS DE TIEMPO => ',font='MedievalSharp 12',key='txtBonusTiempo'),
             sg.Button('',image_filename=self.getBonusTimeImg(),button_color=('black','#FFAAFF'),tooltip='MÁS TIEMPO',key='bonusTime')]            
@@ -125,8 +109,9 @@ class InterfazJuego ():
     def actualizarPuntaje (self,ven):
         ven['jugPje'].Update('Puntaje: '+str(self.getJugador().getPuntaje()))
     
-    def actualizarTimer(self,ven,cont):
-        ven['timer'].update('{:02d}:{:02d}'.format((cont // 100) // 60,(cont // 100) % 60))
+    def actualizarTimer(self,ven):
+        r = self.getReloj().getTiempoInicial()
+        ven['timer'].update('{:02d}:{:02d}'.format((r // 100) // 60,(r // 100) % 60))
 
     def actualizarBotones (self,ven):        
         for i in range(4):
@@ -141,7 +126,7 @@ class InterfazJuego ():
     def actualizarPreguntas(self,ven):
         ven['cambiarPreg'].Update(self.getPreguntas()[self.getJugador().getNivel()])
 
-    def pasarNivel(self,ven,niveles,ok,reloj):
+    def pasarNivel(self,ven,niveles,ok):
         '''
         si OK = True, habilita el nivelCorrecto del nivel en juego; si no, el incorrecto.
         jugador incrementa su nivel
@@ -149,10 +134,11 @@ class InterfazJuego ():
         se actualiza el puntaje en pantalla
         '''
         if ok:
-            puntos = 60-reloj.getContadorTiempo()//100
+            puntos = 60-self.getReloj().getTiempoInicial()//100
             
         else:
-            puntos = -((60-reloj.getContadorTiempo()//100)//5)
+            puntos = -((60-self.getReloj().getTiempoInicial()//100)//5)
+
         niveles.puntuarNivel(self.getJugador().getNivel()-1,puntos)
         self.actualizarImagenesNiveles(ven,self.getJugador().getNivel(),ok)
         self.getJugador().sumarPuntaje(puntos)      
@@ -160,8 +146,7 @@ class InterfazJuego ():
         self.actualizarBotones(ven)
         self.actualizarPuntaje(ven)
         self.actualizarPreguntas(ven)
-        self.setTimer(1)
-        self.actualizarTimer(ven,reloj.getContadorTiempo())
+        self.actualizarTimer(ven)
 
     def evaluarRespuesta(self,respuestaJugador,valida):
         '''
@@ -190,29 +175,21 @@ def inicio(jugador,consignas):
     validas, preguntas = nivelesJugados.crearNiveles(consignas)
 
     respuestasDelJugador = []
+    reloj2 = Reloj(0.5)
+    
+    pausado = False
 
-    interfaz = InterfazJuego (jugador,nivelesJugados.getNiveles(),preguntas,listaImagenes)
+    interfaz = InterfazJuego (jugador,nivelesJugados.getNiveles(),preguntas,reloj2,listaImagenes)
 
 
     ventana = sg.Window ('Juego Cervantes: Inicio',interfaz.getInterfaz(), size = (ancho,alto),element_justification='center')
     ventana.Finalize()
-    interfaz.setTimer(1)
-    reloj = Reloj()
-    pausado = False
+  
     while True:
-        if not pausado:
-            evento,valor = ventana.read(timeout=10)
-            reloj.actualizarContadorTiempo()
-        else:
-            evento, valor = ventana.read()
-        interfaz.actualizarTimer(ventana,reloj.getContadorTiempo())
-        if (interfaz.terminoTimer()):
-            ok = sg.popup_ok ('Se terminó el tiempo para este nivel',font='MedievalSharp 10')
-            if ok:
-                reloj.resetTiempo()
-            nivelActual += 1
-            interfaz.pasarNivel(ventana,nivelesJugados,False,reloj)
-   
+        evento,valor = ventana.read(timeout=10)
+        interfaz.getReloj().actualizarTiempo()
+        interfaz.actualizarTimer(ventana)
+
         if (evento == None):
             break
         
@@ -222,24 +199,31 @@ def inicio(jugador,consignas):
                 break
         
         if (evento == 'ayuda'):
-            explicacionAyuda('ivan')
+            explicacionAyuda(interfaz.getJugador().getNombre())
 
         if (evento == 'bonusTime'):
             ok = sg.popup_ok_cancel ('¿Realmente desea utilizar el Bonus de Tiempo?',font='MedievalSharp 10')
             if (ok=='OK' and interfaz.getBonusTime().getHabilitado()==True):
                 interfaz.getBonusTime().usarBonus()
-                reloj.resetTiempo()
+                interfaz.getReloj().resetTiempo()
+                interfaz.getJugador().sumarPuntaje(-30)
+                interfaz.actualizarPuntaje(ventana)
                 interfaz.desHabilitarBonus(ventana,evento)
+                interfaz.actualizarTimer(ventana)
 
-        if (evento in ['0','1','2','3']):
-            #Envía la lista de preguntas en la posición nivel Actual/Evento y la respuesta válida
-            ok = interfaz.evaluarRespuesta(nivelesJugados.getNiveles()[nivelActual][int(evento)],validas[nivelActual])
-
-            respuestasDelJugador.append(nivelesJugados.getNiveles()[nivelActual][int(evento)])
+        if (evento in ['0','1','2','3'] or (interfaz.getReloj().terminoTimer()) ):
+            if (interfaz.getReloj().terminoTimer()):
+                sg.popup('Se terminó el tiempo para este nivel',font='MedievalSharp 10')
+                respuestasDelJugador.append('TIEMPO TERMINADO')
+                ok = False
+            else:
+                ok = interfaz.evaluarRespuesta(nivelesJugados.getNiveles()[nivelActual][int(evento)],validas[nivelActual])
+                respuestasDelJugador.append(nivelesJugados.getNiveles()[nivelActual][int(evento)])
             try:
-                interfaz.pasarNivel(ventana,nivelesJugados,ok,reloj)
+                interfaz.pasarNivel(ventana,nivelesJugados,ok)
                 nivelActual +=1
-                reloj.resetTiempo()
+                interfaz.getReloj().resetTiempo()
+                interfaz.actualizarTimer(ventana)
             except: 
                 textoRespuestas = []
                 for i in range(5):
